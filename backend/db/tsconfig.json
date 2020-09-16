@@ -5,7 +5,7 @@
     "noImplicitAny": true,
     "removeComments": true,
     "outDir": "./dist/",
+    "sourceMap": true,
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
 }
