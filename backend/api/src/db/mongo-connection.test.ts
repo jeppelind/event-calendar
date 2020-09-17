@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { connect, connection, disconnect, model } from "mongoose";
-import { createEvent, deleteEvent, updateEvent, getUpcomingEvents } from "./mongo-connection"
+import { createEvent, deleteEvent, updateEvent, getUpcomingEvents } from "./mongo-setup"
 import { eventSchema } from "./schemas";
 
 describe('mongo-connection.ts', () => {
