@@ -1,0 +1,9 @@
+schema: ./src/graphql-data/schemas/*.graphql
+generates:
+  ./src/graphql-data/resolver-types.d.ts:
+    config:
+      mappers:
+        Event: ./models#EventModel
+    plugins:
+      - typescript
+      - typescript-resolvers

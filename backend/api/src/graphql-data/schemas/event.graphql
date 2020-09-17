@@ -1,0 +1,19 @@
+
+type Event {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Query {
+  getUpcomingEvents: [Event]
+}
+
+input EventInput {
+  name: String!
+  description: String
+}
+
+type Mutation {
+  createEvent(input: EventInput): Event
+}
