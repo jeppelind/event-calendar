@@ -29,7 +29,7 @@ export const createEvent = async (name: string, startDate: string, endDate?: str
 
 export const deleteEvent = async (id: string) => {
   const result = await EventDBModel.deleteOne({ _id: id });
-  return result;
+  return result.deletedCount;
 }
 
 export const updateEvent = async (id: string, name: string, startDate: string, endDate?: string, description?: string) => {
@@ -43,11 +43,6 @@ export const updateEvent = async (id: string, name: string, startDate: string, e
 }
 
 export const getUpcomingEvents = async () => {
-  const res = await EventDBModel.find({});
-  return res;
-}
-
-export const getUpcomingEvents2 = async () => {
   const res = await EventDBModel.find().where('startDate').gte(new Date());
   return res;
 }

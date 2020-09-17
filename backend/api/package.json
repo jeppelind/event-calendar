@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha -r ts-node/register -r source-map-support/register 'src/**/*.test.ts'",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "npm run generate && tsc --project tsconfig.build.json",
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "generate": "graphql-codegen",
-    "dev": "ts-node src/index.ts",
+    "dev": "npm run generate && ts-node src/index.ts",
     "start": "node dist/index.js"
   },
   "author": "Jeppe Lind",

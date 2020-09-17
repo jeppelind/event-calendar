@@ -5,14 +5,12 @@ import { loadSchemaSync, GraphQLFileLoader, addResolversToSchema } from 'graphql
 import { resolvers } from './graphql-data/resolvers/event-resolvers';
 import { createMongoConnection } from './db/mongo-connection';
 
-const schema = loadSchemaSync(join(__dirname, './graphql-data/schemas/*.graphql'), {
+const schema = loadSchemaSync(join(__dirname, 'graphql-data', 'schemas', '*.graphql'), {
   loaders: [
     new GraphQLFileLoader(),
   ]
 });
 const schemaResolvers = addResolversToSchema({ schema, resolvers });
-
-createMongoConnection();
 
 const app = express();
 
@@ -26,6 +24,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 if (process.env.NODE_ENV !== 'test') {
+  createMongoConnection();
   app.listen(8089, () => console.log('Server running at http://localhost:8089'));
 }
 
