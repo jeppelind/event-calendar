@@ -33,7 +33,7 @@ export const deleteEvent = async (id: string) => {
 }
 
 export const updateEvent = async (id: string, name: string, startDate: string, endDate?: string, description?: string) => {
-  const document = EventDBModel.findByIdAndUpdate(id, {
+  const document = await EventDBModel.findByIdAndUpdate(id, {
     name,
     description,
     startDate: new Date(startDate),

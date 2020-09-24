@@ -1,6 +1,9 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiExclude from 'chai-exclude';
 import { connect, connection, disconnect } from "mongoose";
 import { createEvent, deleteEvent, updateEvent, getUpcomingEvents, EventDBModel } from "./mongo-connection"
+
+chai.use(chaiExclude);
 
 describe('mongo-connection.ts', () => {
   beforeEach('Setup database', () => {
@@ -18,8 +21,15 @@ describe('mongo-connection.ts', () => {
 
   describe('createEvent()', () => {
     it('saves new event to database', async () => {
-      const result = await createEvent('test', '2020-10-24', '2020-10-26', 'test event');
+      const expected = {
+        name: 'test',
+        description: 'test event',
+        startDate: new Date('2020-11-24'),
+        endDate: new Date('2020-11-26')
+      }
+      const result = await createEvent('test', '2020-11-24', '2020-11-26', 'test event');
       expect(result.errors).to.be.undefined;
+      expect(result.toObject()).excluding(['__v', '_id']).to.deep.equal(expected);
     });
   });
 
@@ -51,8 +61,13 @@ describe('mongo-connection.ts', () => {
       }
       const doc = await EventDBModel.create(fakeData);
 
-      const result = await updateEvent(doc.id, 'Test', '2020-10-24', '2020-10-26', 'Test desc 2');
+      const result = await updateEvent(doc.id, 'Test2', '2020-10-24', '2020-10-26', 'Test desc 2');
       expect(result.errors).to.be.undefined;
+    });
+
+    it('returns null when no item is found', async () => {
+      const result = await updateEvent('5f63c5942656c38e3071492b', 'Test', '2020-10-24', '2020-10-26', 'Test desc');
+      expect(result).to.be.null;
     });
   });
 

@@ -6,6 +6,7 @@
     "removeComments": true,
     "outDir": "./dist/",
     "sourceMap": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
 }
