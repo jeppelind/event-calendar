@@ -1,3 +1,4 @@
+import { DateResolver } from 'graphql-scalars';
 import { getUpcomingEvents, createEvent, deleteEvent, updateEvent } from "../../db/mongo-connection"
 import { Resolvers } from "../resolver-types";
 import { EventModel } from "../models";
@@ -12,20 +13,22 @@ export const resolvers: Resolvers = {
   },
   Mutation: {
     createEvent: async (parent, args) => {
-      const eventDocument = await createEvent(args.input.name, '2020-12-02', '2020-12-02', args.input.description)
+      const eventDocument = await createEvent(args.input.name, args.input.startDate, args.input.endDate, args.input.description);
       const eventObj: EventModel = eventDocument.toObject();
       return eventObj;
     },
     deleteEvent: async (parent, args) => {
+      console.dir(args)
       const deletionCount = await deleteEvent(args.id);
       return deletionCount;
     },
     updateEvent: async (parent, args) => {
-      const updatedDocument = await updateEvent(args.id, args.input.name, '2020-12-24', null, args.input.description);
+      const updatedDocument = await updateEvent(args.id, args.input.name, args.input.startDate, args.input.endDate, args.input.description);
       return updatedDocument.id;
     },
   },
   Event: {
     id: event => event._id
-  }
+  },
+  Date: DateResolver
 }

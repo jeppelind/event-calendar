@@ -1,7 +1,7 @@
 import { model, connect, Schema } from "mongoose";
 
 export const createMongoConnection = async () => {
-  await connect('mongodb://localhost:27017/event_calendar', {
+  await connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

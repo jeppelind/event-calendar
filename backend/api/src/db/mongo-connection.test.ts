@@ -7,7 +7,7 @@ chai.use(chaiExclude);
 
 describe('mongo-connection.ts', () => {
   beforeEach('Setup database', () => {
-    connect('mongodb://localhost:27017/TEST_DB', {
+    connect(process.env.MONGODB_TEST_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,

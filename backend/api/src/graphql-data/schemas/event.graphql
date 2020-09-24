@@ -1,8 +1,11 @@
+scalar Date
 
 type Event {
   id: ID!
   name: String!
   description: String
+  startDate: Date
+  endDate: Date
 }
 
 type Query {
@@ -12,6 +15,8 @@ type Query {
 input EventInput {
   name: String!
   description: String
+  startDate: Date
+  endDate: Date
 }
 
 type Mutation {
