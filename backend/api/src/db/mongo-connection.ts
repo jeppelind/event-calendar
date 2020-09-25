@@ -17,32 +17,40 @@ const eventSchema = new Schema({
 
 export const EventDBModel = model('Event', eventSchema);
 
-export const createEvent = async (name: string, startDate: string, endDate?: string, description?: string) => {
+const createEvent = async (name: string, startDate: string, endDate?: string, description?: string) => {
   const document = await EventDBModel.create({
     name,
     description,
     startDate: new Date(startDate),
     endDate: (endDate) ? new Date(endDate) : new Date(startDate),
   });
-  return document;
+  return document.toObject();
 }
 
-export const deleteEvent = async (id: string) => {
+const deleteEvent = async (id: string) => {
   const result = await EventDBModel.deleteOne({ _id: id });
   return result.deletedCount;
 }
 
-export const updateEvent = async (id: string, name: string, startDate: string, endDate?: string, description?: string) => {
+const updateEvent = async (id: string, name: string, startDate: string, endDate?: string, description?: string) => {
   const document = await EventDBModel.findByIdAndUpdate(id, {
     name,
     description,
     startDate: new Date(startDate),
     endDate: (endDate) ? new Date(endDate) : new Date(startDate),
   });
-  return document;
+  return document ? document.id : null;
 }
 
-export const getUpcomingEvents = async () => {
+const getUpcomingEvents = async () => {
   const res = await EventDBModel.find().where('startDate').gte(new Date());
-  return res;
+  const objectArr = res.map(doc => doc.toObject());
+  return objectArr;
+}
+
+export default {
+  getUpcomingEvents,
+  createEvent,
+  deleteEvent,
+  updateEvent,
 }

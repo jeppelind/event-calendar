@@ -2,7 +2,7 @@ import { join } from 'path';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { loadSchemaSync, GraphQLFileLoader, addResolversToSchema } from 'graphql-tools';
-import { resolvers } from './graphql-data/resolvers/event-resolvers';
+import { resolvers } from './graphql-data/resolvers/resolvers';
 import { createMongoConnection } from './db/mongo-connection';
 
 const schema = loadSchemaSync(join(__dirname, 'graphql-data', 'schemas', '*.graphql'), {
