@@ -4,6 +4,8 @@ import chaiHttp = require("chai-http")
 import db from './db/mongo-connection';
 import sinon from 'sinon';
 
+const authToken = process.env.TEST_AUTH_TOKEN
+
 use(chaiHttp);
 
 describe('API', () => {
@@ -16,9 +18,46 @@ describe('API', () => {
   });
 
   describe('/graphql', () => {
+    it('rejects with status 401 on nonauthenticated request', async () => {
+      const result = await request(server)
+        .post(`/graphql?query={}`)
+
+      expect(result).to.have.status(401);
+    });
+
+    it('rejects with status 401 on nonauthorized request', async () => {
+      const stub = sinon.stub(db, 'getUserByToken').resolves(null);
+
+      const result = await request(server)
+        .post(`/graphql?query={}`)
+        .set('Authorization', authToken);
+
+      stub.restore();
+
+      expect(result).to.have.status(401);
+    });
+
+    it('returns unauthorized error when user lacks permissions', async () => {
+      const stub = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 0 });
+
+      const query = `
+      mutation {
+        deleteEvent(id: "5f63c58c2656c38e30714929")
+      }`;
+      const result = await request(server)
+        .post(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
+
+      stub.restore();
+
+      expect(result).to.have.status(200);
+      expect(result.body.errors).to.exist;
+    });
+
     it('getUpcomingEvents', async () => {
       const fakeData = [{ name: 'Testname' }];
       const stub = sinon.stub(db, 'getUpcomingEvents').resolves(fakeData);
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       {
@@ -27,9 +66,11 @@ describe('API', () => {
         }
       }`;
       const result = await request(server)
-        .get(`/graphql?query=${query}`);
+        .get(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
 
       stub.restore();
+      stub2.restore();
 
       const expected = { data: { getUpcomingEvents: fakeData } }
       expect(result).to.have.status(200);
@@ -42,6 +83,7 @@ describe('API', () => {
             startDate: '2020-12-24'
       };
       const stub = sinon.stub(db, 'createEvent').resolves(fakeData);
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       mutation {
@@ -51,9 +93,11 @@ describe('API', () => {
         }
       }`;
       const result = await request(server)
-        .post(`/graphql?query=${query}`);
+        .post(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
 
       stub.restore();
+      stub2.restore();
 
       const expected = { data: { createEvent: fakeData } }
       expect(result).to.have.status(200);
@@ -62,15 +106,18 @@ describe('API', () => {
 
     it('deleteEvent', async () => {
       const stub = sinon.stub(db, 'deleteEvent').resolves(1);
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       mutation {
         deleteEvent(id: "5f63c58c2656c38e30714929")
       }`;
       const result = await request(server)
-        .post(`/graphql?query=${query}`);
+        .post(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
 
       stub.restore();
+      stub2.restore();
 
       const expected = { data: { deleteEvent: 1 } };
       expect(result).to.have.status(200);
@@ -80,15 +127,18 @@ describe('API', () => {
     it('updateEvent', async () => {
       const fakeData = '12345';
       const stub = sinon.stub(db, 'updateEvent').resolves(fakeData);
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       mutation {
         updateEvent(id: "${fakeData}", input: { name: "New name" })
       }`;
       const result = await request(server)
-        .post(`/graphql?query=${query}`);
+        .post(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
 
       stub.restore();
+      stub2.restore();
 
       const expected = { data: { updateEvent: fakeData } }
       expect(result).to.have.status(200);

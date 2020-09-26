@@ -1,7 +1,7 @@
 import { expect, use } from "chai";
 import chaiExclude from 'chai-exclude';
 import { connect, connection, disconnect } from "mongoose";
-import db, { EventDBModel } from "./mongo-connection"
+import db, { EventDBModel, UserDBModel } from "./mongo-connection"
 
 use(chaiExclude);
 
@@ -93,5 +93,25 @@ describe('mongo-connection.ts', () => {
       const result = await db.getUpcomingEvents();
       expect(result.length).to.equal(2);
     });
-  })
+  });
+
+  describe('getUserByToken()', () => {
+    it('returns user object given token', async () => {
+      const fakeData = {
+        name: 'Test',
+        role: 13,
+        token: 'abc',
+      };
+      await UserDBModel.create(fakeData);
+
+      const result = await db.getUserByToken('abc');
+      const expected = { name: 'Test', role: 13 };
+      expect(result).excluding(['__v', '_id']).to.deep.equal(expected);
+    });
+
+    it('returns null when no user is found', async () => {
+      const result = await db.getUserByToken('def');
+      expect(result).to.be.null;
+    });
+  });
 });

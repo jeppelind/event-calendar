@@ -48,9 +48,23 @@ const getUpcomingEvents = async () => {
   return objectArr;
 }
 
+const userSchema = new Schema({
+  name: String,
+  token: String,
+  role: Number,
+});
+
+export const UserDBModel = model('User', userSchema);
+
+const getUserByToken = async (token: string) => {
+  const document = await UserDBModel.findOne({ token }).select({ token: 0, password: 0 });
+  return document ? document.toObject() : null;
+}
+
 export default {
   getUpcomingEvents,
   createEvent,
   deleteEvent,
   updateEvent,
+  getUserByToken,
 }
