@@ -8,13 +8,12 @@ import passport from 'passport';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 
 passport.use(new BearerStrategy(async (token, done) => {
-    const user = await db.getUserByToken(token);
-    if (user) {
-      return done(null, user);
-    }
-    return done(null, false);
+  const user = await db.getUserByToken(token);
+  if (user) {
+    return done(null, user);
   }
-))
+  return done(null, false);
+}));
 
 const schema = loadSchemaSync(join(__dirname, 'graphql-data', 'schemas', '*.graphql'), {
   loaders: [
