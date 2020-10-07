@@ -10,5 +10,6 @@ export type EventListItemProps = {
   id: string,
   name: string,
   description?: string,
-  startDate?: Date,
+  startDate: Date,
+  endDate?: Date,
 }

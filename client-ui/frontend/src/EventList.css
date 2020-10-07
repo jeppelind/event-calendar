@@ -1,0 +1,12 @@
+.event-item .date {
+  font-weight: 700;
+}
+
+.event-item .title {
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+
+.event-item .description {
+  font-weight: 300;
+}

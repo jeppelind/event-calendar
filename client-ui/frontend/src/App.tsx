@@ -7,12 +7,8 @@ class App extends React.Component<{}, AppState> {
   state = { events: []}
 
   async componentDidMount() {
-    console.log('mounted!')
-    console.log(process.env.NODE_ENV)
-    const startTime = Date.now();
     const events = await this.fetchEvents();
     this.setState({ events });
-    console.log(`time taken: ${Date.now() - startTime} ms.`);
   }
 
   async fetchEvents() {
@@ -21,6 +17,9 @@ class App extends React.Component<{}, AppState> {
         getUpcomingEvents {
           id
           name
+          description
+          startDate
+          endDate
         }
       }`;
     try {
@@ -45,10 +44,9 @@ class App extends React.Component<{}, AppState> {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          Testius
+        {/* <header className="App-header"> */}
           <EventList events={this.state.events} />
-        </header>
+        {/* </header> */}
       </div>
     );
   }
