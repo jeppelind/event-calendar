@@ -4,9 +4,11 @@
 
 .event-item .title {
   font-weight: 400;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 }
 
 .event-item .description {
   font-weight: 300;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
 }

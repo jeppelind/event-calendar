@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { EventList } from './EventList';
+import { Header } from './Header';
 import { AppState } from './types';
 
 class App extends React.Component<{}, AppState> {
@@ -44,6 +45,7 @@ class App extends React.Component<{}, AppState> {
   render() {
     return (
       <div className="App">
+        <Header></Header>
         {/* <header className="App-header"> */}
           <EventList events={this.state.events} />
         {/* </header> */}
