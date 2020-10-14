@@ -10,19 +10,19 @@ if (process.env.NODE_ENV === 'dev') {
   app.use(cors({ origin: 'http://localhost:3000' }));
 }
 
-app.use(express.static(join(__dirname, '/../../frontend', 'build')));
+app.use(express.static(join(__dirname, process.env.STATIC_ASSETS_PATH)));
 
 app.get('/ping', (req, res) => {
   res.send('pong.');
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, '/../../frontend', 'build', 'index.html'));
+  res.sendFile(join(__dirname, process.env.STATIC_ASSETS_PATH, 'index.html'));
 });
 
 app.use('/graphql', bodyParser.json(), async (req, res) => {
   try {
-    const apiRes = await fetch('http://localhost:8089/graphql', {
+    const apiRes = await fetch(`${process.env.API_URL}/graphql`, {
       method: 'POST',
       body: JSON.stringify(req.body),
       headers: {

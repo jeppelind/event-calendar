@@ -16,7 +16,6 @@ class App extends React.Component<{}, AppState> {
     const query = `
       {
         getUpcomingEvents {
-          id
           name
           description
           startDate
@@ -24,7 +23,7 @@ class App extends React.Component<{}, AppState> {
         }
       }`;
     try {
-      const response = await fetch('http://localhost:8090/graphql', {
+      const response = await fetch('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
