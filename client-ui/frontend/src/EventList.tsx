@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid } from 'semantic-ui-react';
 import './EventList.css';
-import { EventListProps, EventListItemProps } from "./types";
+import { EventListItemProps } from "./types";
 
 enum DATES {
   jan,
@@ -18,11 +18,51 @@ enum DATES {
   dec
 }
 
-export const EventList = ({ events } : EventListProps) => {
+export const EventList = () => {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const asyncFetch = async () => {
+      const result = await fetchEvents();
+      setEvents(result);
+    }
+    asyncFetch();
+  }, []);
+
+  const fetchEvents = async () => {
+    const query = `
+      {
+        getUpcomingEvents {
+          id
+          name
+          description
+          startDate
+          endDate
+        }
+      }`;
+    try {
+      const response = await fetch('/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query })
+      });
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      const result = await response.json();
+      return result.data.getUpcomingEvents;
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  }
+
   return (
     <div className="events-container">
       {
-        events.map((event) => {
+        events.map((event: EventListItemProps) => {
           return <EventListItem key={event.id} id={event.id} name={event.name}
             description={event.description} startDate={event.startDate} endDate={event.endDate}></EventListItem>
         })
