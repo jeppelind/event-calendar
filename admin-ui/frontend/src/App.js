@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom';
 import Login from './Login';
-import { ProvideAuth, useAuth } from './auth';
+import { ProvideAuth, useAuth } from './utils/auth';
 
 export default function App() {
   return (

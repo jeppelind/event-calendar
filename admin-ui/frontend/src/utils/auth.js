@@ -19,7 +19,10 @@ const useProvideAuth = () => {
   const login = (username, password) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        setUser('tester');
+        if (Math.random() < 0.5) {
+          return reject('Invalid user');
+        }
+        setUser(username);
         resolve();
       }, 2000);
     });
