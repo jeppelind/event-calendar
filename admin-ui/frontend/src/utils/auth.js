@@ -14,22 +14,29 @@ export const ProvideAuth = ({ children }) => {
 }
 
 const useProvideAuth = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({name: null, email: null});
 
-  const login = (username, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (Math.random() < 0.5) {
-          return reject('Invalid user');
-        }
-        setUser(username);
-        resolve();
-      }, 2000);
+  const login = async (email, password) => {
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password })
     });
+    if (!response.ok) {
+      const message = await response.text();
+      throw Error(message);
+    }
+    const result = await response.json();
+    setUser(prevState => ({
+      ...prevState,
+      ...result
+    }));
   };
 
   const logout = () => {
-    setUser(null);
+    setUser({name: null, email: null});
   };
 
   return {

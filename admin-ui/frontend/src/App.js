@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Login from './Login';
 import { ProvideAuth, useAuth } from './utils/auth';
 
@@ -10,16 +10,6 @@ export default function App() {
         <Header></Header>
         <LoginButton></LoginButton>
         <Router>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            </ul>
-          </nav>
           <Switch>
             <Route path="/login">
               <Login />
@@ -36,17 +26,20 @@ export default function App() {
 
 function Header() {
   const auth = useAuth();
-  return <h1>User: {auth.user}</h1>
+  return <h1>User: {auth.user.name}</h1>
 }
 
 function LoginButton() {
   const auth = useAuth();
-  return <button onClick={() => {auth.user ? auth.logout() : auth.login('', '') }}>{auth.user ? <>{auth.user}</> : 'Sign In' }</button>
+  if (!auth.user.name) {
+    return <></>;
+  }
+  return <button onClick={() => { auth.logout() }}>Log out</button>
 }
 
 function ProtectedRoute({ children }) {
   const auth = useAuth();
-  if (auth.user) {
+  if (auth.user.name) {
     return children;
   }
   return <Redirect to="/login" />

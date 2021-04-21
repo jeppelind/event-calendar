@@ -22,35 +22,25 @@ describe('db-wrapper.ts', () => {
   describe('getUser()', () => {
     it('returns valid user', async () => {
       const fakeData = {
+        email: 'test@test.com',
         name: 'Tester',
         password: 'abc123',
       }
       await UserModel.create(fakeData);
 
-      const result = await db.getUser('Tester', 'abc123');
-      const expected = { name: 'Tester' };
-      expect(result).excluding(['__v', '_id']).to.deep.equal(expected);
+      const result = await db.getUser('test@test.com');
+      expect(result).excluding(['__v', '_id']).to.deep.equal(fakeData);
     });
 
-    it('returns null when not provided correct password', async () => {
+    it('returns null when not provided correct email', async () => {
       const fakeData = {
+        email: 'test@test.com',
         name: 'Tester',
         password: 'abc123',
       }
       await UserModel.create(fakeData);
 
-      const result = await db.getUser('Tester', 'abc125');
-      expect(result).to.be.null;
-    });
-
-    it('returns null when not provided correct username', async () => {
-      const fakeData = {
-        name: 'Tester',
-        password: 'abc123',
-      }
-      await UserModel.create(fakeData);
-
-      const result = await db.getUser('Tester2', 'abc123');
+      const result = await db.getUser('test2@test.com');
       expect(result).to.be.null;
     });
   });

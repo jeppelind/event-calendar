@@ -1,6 +1,7 @@
+import './Login.css';
 import { useEffect, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
-import { Form, Message } from 'semantic-ui-react';
+import { Form, Grid, Message } from 'semantic-ui-react';
 import { useAuth } from './utils/auth';
 
 export default function Login() {
@@ -16,7 +17,7 @@ export default function Login() {
     try {
       await auth.login(email, password);
     } catch (e) {
-      setError(e);
+      setError(e.message);
     }
     setIsLoading(false);
   }
@@ -26,18 +27,27 @@ export default function Login() {
     return () => {};
   }, [email, password]);
 
-  if (auth.user) {
+  if (auth.user.name) {
     return <Redirect to="/" />
   } else {
     return (
       <div className="login">
-        <h2>Login</h2>
-        <Form loading={isLoading} error={error.length > 0} onSubmit={handleSubmit}>
-          <Form.Input label='Email' name='email' value={email} onChange={(evt) => setEmail(evt.target.value)} />
-          <Form.Input label='Password' type='password' value={password} onChange={(evt) => setPassword(evt.target.value)} />
-          <Message error header='Problem signing in' content={error} />
-          <Form.Button disabled={!isInputValid}>Submit</Form.Button>
-        </Form>
+        <Grid verticalAlign='middle' container doubling centered>
+          <Grid.Column mobile={16} tablet={8} computer={5}>
+            <Grid.Row>
+              <h2>Login</h2>
+              <br/>
+            </Grid.Row>
+            <Grid.Row>
+              <Form error={error.length > 0} onSubmit={handleSubmit}>
+                <Form.Input label='Email' name='email' value={email} onChange={(evt) => setEmail(evt.target.value)} />
+                <Form.Input label='Password' type='password' value={password} onChange={(evt) => setPassword(evt.target.value)} />
+                <Message error header='Problem signing in' content={error} />
+                <Form.Button disabled={!isInputValid} loading={isLoading} color='purple' fluid>Login</Form.Button>
+              </Form>
+            </Grid.Row>
+          </Grid.Column>
+        </Grid>
       </div>
     )
   }  
