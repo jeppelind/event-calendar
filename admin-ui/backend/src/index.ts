@@ -1,7 +1,8 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import cors from 'cors';
-import dbWrapper, { createMongoConnection } from './db-wrapper';
+import { createMongoConnection } from './db-wrapper';
+import { getUserObject } from './user';
 
 const app = express();
 
@@ -14,16 +15,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', bodyParser.json(), async (req, res) => {
-  const user = await dbWrapper.getUser(req.body.email);
-  if (!user) {
-    return res.status(500).send('User not found.');
-  } else if (user.password !== req.body.password) {
-    return res.status(500).send('Incorrect password.');
+  try {
+    const user = await getUserObject(req.body.email, req.body.password);
+    res.send(JSON.stringify(user));
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-  res.send(JSON.stringify({
-    name: user.name,
-    email: user.email
-  }));
 });
 
 if (process.env.NODE_ENV !== 'test') {
