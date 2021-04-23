@@ -8,13 +8,6 @@ export const createMongoConnection = async () => {
   });
 }
 
-interface User {
-  id: String,
-  email: String,
-  name: String,
-  password: String,
-}
-
 const userSchema = new Schema({
   email: String,
   name: String,
@@ -28,7 +21,7 @@ const getUser = async (email: string) => {
   if (!document) {
     return null;
   }
-  return document.toObject() as User;
+  return document.toObject();
 }
 
 const addUser = async (email: string, password: string, name?: string) => {
@@ -41,7 +34,7 @@ const addUser = async (email: string, password: string, name?: string) => {
     password,
     name: (name) ? name : '',
   });
-  return document.toObject() as User;
+  return document.toObject();
 }
 
 const updateUser = async (email: string, name: string) => {
@@ -58,7 +51,7 @@ const changePassword = async (email:string, password: string, newPassword: strin
   if (!document) {
     throw Error('Cant update user.');
   }
-  return document.toObject() as User;
+  return document.toObject();
 }
 
 export default {

@@ -6,15 +6,16 @@ import { changeUserPassword, createNewUser, getUserObject } from './user';
 
 use(chaiExclude);
 
+const fakeData: any = {
+    id: '123',
+    email: 'test@test.com',
+    name: 'Tester',
+    password: 'abc123',
+}
+
 describe('user.ts', () => {
   describe('getUserObject', () => {
     it('returns user object', async () => {
-        const fakeData = {
-            id: '123',
-            email: 'test@test.com',
-            name: 'Tester',
-            password: 'abc123',
-        }
         const stub = sinon.stub(dbWrapper, 'getUser').resolves(fakeData);
         const result = await getUserObject('test@test.com', 'abc123');
 
@@ -40,12 +41,6 @@ describe('user.ts', () => {
     });
 
     it('throws error when password is wrong', async () => {
-        const fakeData = {
-            id: '123',
-            email: 'test@test.com',
-            name: 'Tester',
-            password: 'abc123',
-        }
         const stub = sinon.stub(dbWrapper, 'getUser').resolves(fakeData);
         let result = null;
         try {
@@ -63,12 +58,6 @@ describe('user.ts', () => {
 
   describe('createNewUser', () => {
     it('returns created user id', async () => {
-        const fakeData = {
-            id: '123',
-            email: 'test@test.com',
-            name: 'Tester',
-            password: 'abc123',
-        }
         const stub = sinon.stub(dbWrapper, 'addUser').resolves(fakeData);
         const result = await createNewUser('test@mail.com', 'abc123');
         stub.restore();
@@ -92,14 +81,8 @@ describe('user.ts', () => {
 
   describe('changeUserPassword', () => {
     it('returns user id on success', async () => {
-        const fakeData = {
-            id: '123',
-            email: 'test@mail.com',
-            name: 'Tester',
-            password: 'abc123',
-        }
         const stub = sinon.stub(dbWrapper, 'changePassword').resolves(fakeData);
-        const result = await changeUserPassword('test@mail.com', 'abc123', 'abc456');
+        const result = await changeUserPassword('test@test.com', 'abc123', 'abc456');
 
         stub.restore();
 
