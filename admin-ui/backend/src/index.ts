@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', bodyParser.json(), async (req, res) => {
-  console.dir(req.body)
   try {
     const user = await getUserObject(req.body.email, req.body.password);
     res.send(JSON.stringify(user));
@@ -29,16 +28,17 @@ app.post('/addUser', bodyParser.json(), async (req, res) => {
     const newUserId = await createNewUser(req.body.email, req.body.password, req.body.name);
     res.send(newUserId);
   } catch (err) {
+    console.error(err);
     res.status(500).send(err.message);
   }
 });
 
 app.post('/changePassword', bodyParser.json(), async (req, res) => {
   try {
-    const result = await changeUserPassword(req.body.email, req.body.password, req.body.newPassword);
-    console.dir(result);
+    const result = await changeUserPassword(req.body.id, req.body.password, req.body.newPassword);
     res.send(result);
   } catch (err) {
+    console.error(err);
     res.status(500).send(err.message);
   }
 });

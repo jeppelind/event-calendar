@@ -24,6 +24,11 @@ const getUser = async (email: string) => {
   return document.toObject();
 }
 
+const getUserById = async (id: string) => {
+  const document = await UserModel.findById(id);
+  return document ? document.toObject() : null;
+}
+
 const addUser = async (email: string, password: string, name?: string) => {
   const existingDoc = await UserModel.findOne({ email });
   if (existingDoc) {
@@ -44,8 +49,8 @@ const updateUser = async (email: string, name: string) => {
   return document ? document.id : null;
 }
 
-const changePassword = async (email:string, password: string, newPassword: string) => {
-  const document = await UserModel.findOneAndUpdate({ email, password }, {
+const changePassword = async (id: string, password: string, newPassword: string) => {
+  const document = await UserModel.findOneAndUpdate({ _id: id, password }, {
     password: newPassword
   }, { new: true });
   if (!document) {
@@ -56,6 +61,7 @@ const changePassword = async (email:string, password: string, newPassword: strin
 
 export default {
   getUser,
+  getUserById,
   addUser,
   updateUser,
   changePassword,

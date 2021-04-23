@@ -1,16 +1,18 @@
 import { expect, use } from 'chai';
 import chaiExclude from 'chai-exclude';
+import bcrypt from 'bcrypt';
 import dbWrapper from './db-wrapper';
 import sinon from 'sinon';
 import { changeUserPassword, createNewUser, getUserObject } from './user';
 
 use(chaiExclude);
 
-const fakeData: any = {
-    id: '123',
+const hashedPwd = bcrypt.hashSync('abc123', 10);
+const fakeData = {
+    _id: '123',
     email: 'test@test.com',
     name: 'Tester',
-    password: 'abc123',
+    password: hashedPwd,
 }
 
 describe('user.ts', () => {
@@ -21,7 +23,7 @@ describe('user.ts', () => {
 
         stub.restore();
 
-        const expected = { email: 'test@test.com', name: 'Tester' };
+        const expected = { id: '123', email: 'test@test.com', name: 'Tester' };
         expect(result).to.deep.equal(expected);
     });
 
@@ -82,7 +84,7 @@ describe('user.ts', () => {
   describe('changeUserPassword', () => {
     it('returns user id on success', async () => {
         const stub = sinon.stub(dbWrapper, 'changePassword').resolves(fakeData);
-        const result = await changeUserPassword('test@test.com', 'abc123', 'abc456');
+        const result = await changeUserPassword('123', 'abc123', 'abc456');
 
         stub.restore();
 

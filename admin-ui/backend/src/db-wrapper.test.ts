@@ -11,7 +11,8 @@ const fakeData = {
   password: 'abc123',
 }
 const populateDBWithFakeData = async () => {
-  await UserModel.create(fakeData);
+  const result = await UserModel.create(fakeData);
+  return result;
 }
 
 describe('db-wrapper.ts', () => {
@@ -41,6 +42,15 @@ describe('db-wrapper.ts', () => {
 
       const result = await dbWrapper.getUser('test2@test.com');
       expect(result).to.be.null;
+    });
+  });
+
+  describe('getUserById', () => {
+    it('returns valid user', async () => {
+      const doc = await populateDBWithFakeData();
+      
+      const result = await dbWrapper.getUserById(doc.id);
+      expect(result).excluding(['__v', '_id']).to.deep.equal(fakeData);
     });
   });
 
@@ -85,9 +95,9 @@ describe('db-wrapper.ts', () => {
 
   describe('changePassword', () => {
     it('updates password given user and existing password', async () => {
-      await populateDBWithFakeData();
+      const doc = await populateDBWithFakeData();
 
-      const result = await dbWrapper.changePassword('test@test.com', 'abc123', 'abc456');
+      const result = await dbWrapper.changePassword(doc.id, 'abc123', 'abc456');
       const expected = {
         email: 'test@test.com',
         name: 'Tester',
@@ -97,11 +107,11 @@ describe('db-wrapper.ts', () => {
     });
 
     it('throws error if email and existing password is incorrect', async () => {
-      await populateDBWithFakeData();
+      const doc = await populateDBWithFakeData();
 
       let result = null;
         try {
-            await dbWrapper.changePassword('test@test.com', 'wrongPwd', 'abc456');
+            await dbWrapper.changePassword(doc.id, 'wrongPwd', 'abc456');
         } catch (err) {
             result = err;
         }
