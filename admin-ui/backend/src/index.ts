@@ -25,7 +25,7 @@ app.post('/login', bodyParser.json(), async (req, res) => {
 
 app.post('/addUser', bodyParser.json(), async (req, res) => {
   try {
-    const newUserId = await createNewUser(req.body.email, req.body.password, req.body.name);
+    const newUserId = await createNewUser(req.body.email, req.body.password, req.body.role, req.body.name);
     res.send(newUserId);
   } catch (err) {
     console.error(err);

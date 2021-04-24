@@ -12,6 +12,8 @@ const userSchema = new Schema({
   email: String,
   name: String,
   password: String,
+  token: String,
+  role: Number,
 });
 
 export const UserModel = model('User', userSchema);
@@ -29,7 +31,7 @@ const getUserById = async (id: string) => {
   return document ? document.toObject() : null;
 }
 
-const addUser = async (email: string, password: string, name?: string) => {
+const addUser = async (email: string, password: string, role: number, token: string, name?: string) => {
   const existingDoc = await UserModel.findOne({ email });
   if (existingDoc) {
     throw Error('Email already in use.');
@@ -37,6 +39,8 @@ const addUser = async (email: string, password: string, name?: string) => {
   const document = await UserModel.create({
     email,
     password,
+    role,
+    token,
     name: (name) ? name : '',
   });
   return document.toObject();

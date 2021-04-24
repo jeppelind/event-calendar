@@ -9,6 +9,8 @@ const fakeData = {
   email: 'test@test.com',
   name: 'Tester',
   password: 'abc123',
+  role: 1,
+  token: '000',
 }
 const populateDBWithFakeData = async () => {
   const result = await UserModel.create(fakeData);
@@ -56,11 +58,13 @@ describe('db-wrapper.ts', () => {
 
   describe('addUser', () => {
     it('saves new user to database', async () => {
-      const result = await dbWrapper.addUser('new@mail.com', 'abc123', 'New User');
+      const result = await dbWrapper.addUser('new@mail.com', 'abc123', 1, '000', 'New User');
       const expected = {
         name: 'New User',
         email: 'new@mail.com',
         password: 'abc123',
+        role: 1,
+        token: '000',
       }
       expect(result).excluding(['__v', '_id', 'id']).to.deep.equal(expected);
     });
@@ -70,7 +74,7 @@ describe('db-wrapper.ts', () => {
 
       let result = null;
         try {
-            await dbWrapper.addUser('test@test.com', 'abc456', 'New User');
+            await dbWrapper.addUser('test@test.com', 'abc456', 1, 'New User');
         } catch (err) {
             result = err;
         }
@@ -99,9 +103,8 @@ describe('db-wrapper.ts', () => {
 
       const result = await dbWrapper.changePassword(doc.id, 'abc123', 'abc456');
       const expected = {
-        email: 'test@test.com',
-        name: 'Tester',
-        password: 'abc456',
+        ...fakeData,
+        ...{ password: 'abc456' },
       };
       expect(result).excluding(['__v', '_id', 'id']).to.deep.equal(expected);
     });
