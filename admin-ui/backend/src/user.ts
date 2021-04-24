@@ -25,6 +25,7 @@ export const getUserObject = async (email: string, password: string) => {
         name: user.name,
         email: user.email,
         token: user.token,
+        role: user.role,
     }
 }
 

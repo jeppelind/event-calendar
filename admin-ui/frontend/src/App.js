@@ -1,14 +1,15 @@
 import './App.css';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Login from './Login';
+import Header from './Header';
 import { ProvideAuth, useAuth } from './utils/auth';
+import { EventList } from './EventList';
 
 export default function App() {
   return (
     <ProvideAuth>
       <div className="App">
         <Header></Header>
-        <LoginButton></LoginButton>
         <Router>
           <Switch>
             <Route path="/login">
@@ -16,25 +17,13 @@ export default function App() {
             </Route>
             <ProtectedRoute path="/">
               <Home />
+              <EventList />
             </ProtectedRoute>
           </Switch>
         </Router>
       </div>
     </ProvideAuth>
   );
-}
-
-function Header() {
-  const auth = useAuth();
-  return <h1>User: {auth.user.name}</h1>
-}
-
-function LoginButton() {
-  const auth = useAuth();
-  if (!auth.user.name) {
-    return <></>;
-  }
-  return <button onClick={() => { auth.logout() }}>Log out</button>
 }
 
 function ProtectedRoute({ children }) {

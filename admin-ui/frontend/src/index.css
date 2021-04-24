@@ -19,6 +19,10 @@ h1, h2, h3, h4, h5, h6, .ui.form input[type=text], .ui.button {
     sans-serif;
 }
 
+a {
+  color: rgb(216, 103, 216);
+}
+
 .ui.form .field>label {
   color: rgb(240, 240, 240);
 }
