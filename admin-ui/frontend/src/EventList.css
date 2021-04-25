@@ -4,21 +4,35 @@
 
 .event-item .date {
   font-weight: 700;
+  font-size: 1.1rem;
   text-align: center;
+}
+.event-item:hover .date {
+  color: rgb(243, 232, 186);
 }
 
 .event-item .title {
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   text-align: center;
 }
 
 .event-item .description {
   font-weight: 300;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  color: rgb(211, 211, 211);
   margin-bottom: 1rem;
   margin-top: 0.4rem;
   text-align: center;
+}
+
+.event-item .item-buttons {
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.event-item:hover .item-buttons {
+  opacity: 1;
 }
 
 @media only screen and (min-width: 768px) {

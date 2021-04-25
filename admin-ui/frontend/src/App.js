@@ -16,7 +16,6 @@ export default function App() {
               <Login />
             </Route>
             <ProtectedRoute path="/">
-              <Home />
               <EventList />
             </ProtectedRoute>
           </Switch>
@@ -32,8 +31,4 @@ function ProtectedRoute({ children }) {
     return children;
   }
   return <Redirect to="/login" />
-}
-
-function Home() {
-  return <h2>Home</h2>;
 }

@@ -14,7 +14,7 @@ export const ProvideAuth = ({ children }) => {
 }
 
 const useProvideAuth = () => {
-  const [user, setUser] = useState({name: null, email: null});
+  const [user, setUser] = useState({});
 
   const login = async (email, password) => {
     const response = await fetch('/login', {
@@ -36,7 +36,7 @@ const useProvideAuth = () => {
   };
 
   const logout = () => {
-    setUser({name: null, email: null});
+    setUser({});
   };
 
   return {

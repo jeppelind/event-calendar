@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import fetch from 'node-fetch';
 import cors from 'cors';
 import { createMongoConnection } from './db-wrapper';
 import { changeUserPassword, createNewUser, getUserObject } from './user';
@@ -42,6 +43,24 @@ app.post('/changePassword', bodyParser.json(), async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+app.post('/graphql', bodyParser.json(), async (req, res) => {
+  try {
+    const apiRes = await fetch(`${process.env.API_URL}/graphql`, {
+      method: 'POST',
+      body: JSON.stringify({ query: req.body.query }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${req.body.token}`
+      }
+    });
+    const json = await apiRes.json();
+    res.send(json);
+  } catch (err) {
+    console.error(err)
+    res.status(500).send(err);
+  }
+})
 
 if (process.env.NODE_ENV !== 'test') {
   createMongoConnection();
