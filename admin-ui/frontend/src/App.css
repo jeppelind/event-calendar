@@ -7,3 +7,12 @@
 .App-link {
   color: #61dafb;
 }
+
+.modal-darkmode.ui.modal>.header,
+.modal-darkmode.ui.modal>.content,
+.modal-darkmode.ui.modal>.actions {
+  background-color: rgb(46, 46, 46);
+  color: aliceblue;
+}
+
+

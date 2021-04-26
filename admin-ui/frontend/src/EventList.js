@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { useAuth } from './utils/auth';
 import './EventList.css';
+import DeleteEventButton from './DeleteEventButton';
 
 const DATES = [
   'jan',
@@ -72,7 +73,7 @@ export const EventList = () => {
   );
 }
 
-const EventListItem = ({ name, description, startDate, endDate }) => {
+const EventListItem = ({ id, name, description, startDate, endDate }) => {
   const formatedDate = formatDate(startDate, endDate);
   return (
     <div className="event-item">
@@ -87,7 +88,7 @@ const EventListItem = ({ name, description, startDate, endDate }) => {
           </Grid.Column>
           <Grid.Column mobile={6} tablet={6} computer={3} largeScreen={2} className='item-buttons'>
             <Button color='purple'>Edit</Button>
-            <Button className='ui icon button'><i aria-hidden='true' className='trash icon'></i></Button>
+            <DeleteEventButton id={id}></DeleteEventButton>
           </Grid.Column>
         </Grid.Row>
       </Grid>
