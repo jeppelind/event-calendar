@@ -34,3 +34,4 @@ export default userSlice.reducer;
 export const { userSignedOut } = userSlice.actions;
 
 export const selectUser = (state) => state.user;
+export const selectUserToken = (state) => state.user.token;

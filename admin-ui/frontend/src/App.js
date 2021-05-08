@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import Login from './Login';
-import Header from './Header';
-import { EventList } from './EventList';
 import { useSelector } from 'react-redux';
+import Login from './features/user/Login';
+import Header from './Header';
+import { EventList } from './features/events/EventList';
 import { selectUser } from './features/user/userSlice';
 
 export default function App() {

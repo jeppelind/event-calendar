@@ -1,51 +1,33 @@
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dimmer, Loader, Modal } from 'semantic-ui-react';
-
-const deleteEvent = async (id, token) => {
-  const query = `
-    mutation {
-      deleteEvent(id: "${id}")
-    }`;
-  try {
-    const response = await fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, token })
-    });
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
-    const result = await response.json();
-    return result.data.deleteEvent;
-  } catch (err) {
-    console.error(err);
-    return 0;
-  }
-}
+import { selectUserToken } from '../user/userSlice';
+import { deleteEvent } from './eventsSlice';
 
 export default function DeleteEventButton({ id }) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const userToken = useSelector(selectUserToken);
 
   const confirm = async () => {
-    setLoading(true);
     try {
-      const mupp = await deleteEvent(id, '71310a97-6261-406f-b6bf-574f091bd31e');
-      console.log(`deleted: ${mupp}`);
+      setIsLoading(true);
+      const res = await dispatch(deleteEvent({ eventId: id, userToken }));
+      unwrapResult(res);
     } catch (err) {
-      console.log(err);
+      console.error(err.message);
+      setIsLoading(false);
     }
-    setLoading(false);
-    setOpen(false);
   }
+
   const cancel = () => {
-    setOpen(false);
+    setIsOpen(false);
   }
 
   const show = () => {
-    setOpen(true);
+    setIsOpen(true);
   }
 
   return (
@@ -54,10 +36,10 @@ export default function DeleteEventButton({ id }) {
       <Modal
         className='modal-darkmode'
         dimmer='blurring'
-        open={open}
+        open={isOpen}
         onClose={cancel}
       >
-        {loading &&
+        {isLoading &&
           <Dimmer active>
             <Loader>Deleting...</Loader>
           </Dimmer>

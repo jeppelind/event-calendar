@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { Form, Grid, Message } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, signInUser } from './features/user/userSlice';
+import { selectUser, signInUser } from './userSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function Login() {
