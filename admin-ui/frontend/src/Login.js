@@ -2,24 +2,30 @@ import './Login.css';
 import { useEffect, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { Form, Grid, Message } from 'semantic-ui-react';
-import { useAuth } from './utils/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, signInUser } from './features/user/userSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isInputValid, setIsInputValid] = useState(false);
   const [error, setError] = useState('');
-  const auth = useAuth();
+  const user = useSelector(selectUser);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     try {
-      await auth.login(email, password);
-    } catch (e) {
-      setError(e.message);
+      setIsLoading(true);
+      const res = await dispatch(signInUser({ email, password }));
+      unwrapResult(res);
+    } catch (err) {
+      setError(err.message);
+      setPassword('');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -27,7 +33,7 @@ export default function Login() {
     return () => {};
   }, [email, password]);
 
-  if (auth.user.name) {
+  if (Object.keys(user).length > 0) {
     return <Redirect to="/" />
   } else {
     return (
@@ -50,5 +56,5 @@ export default function Login() {
         </Grid>
       </div>
     )
-  }  
+  }
 }

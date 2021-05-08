@@ -1,14 +1,20 @@
 import React from 'react';
 import './Header.css';
-import { useAuth } from './utils/auth';
 import { Dropdown, Grid } from 'semantic-ui-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSignedOut, selectUser } from './features/user/userSlice';
 
 export default function Header() {
-  const auth = useAuth();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  const logout = () => {
+    dispatch(userSignedOut());
+  }
 
   const dropdownTrigger = (
     <span>
-      {auth.user.name}
+      {user.name}
     </span>
   )
 
@@ -20,11 +26,11 @@ export default function Header() {
             <h3>Evenemangskalendern <b>Admin</b></h3>
           </Grid.Column>
           <Grid.Column textAlign='right' floated='right' width={3}>
-            {auth.user.name &&
+            {user.name &&
               <Dropdown inline className='right-info' trigger={dropdownTrigger}>
                 <Dropdown.Menu>
                   <Dropdown.Item text='Profile' />
-                  <Dropdown.Item text='Logout' onClick={() => { auth.logout() }} />
+                  <Dropdown.Item text='Logout' onClick={logout} />
                 </Dropdown.Menu>
               </Dropdown>
             }

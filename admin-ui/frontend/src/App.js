@@ -2,12 +2,12 @@ import './App.css';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Login from './Login';
 import Header from './Header';
-import { ProvideAuth, useAuth } from './utils/auth';
 import { EventList } from './EventList';
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/user/userSlice';
 
 export default function App() {
   return (
-    <ProvideAuth>
       <div className="App">
         <Header></Header>
         <Router>
@@ -21,13 +21,12 @@ export default function App() {
           </Switch>
         </Router>
       </div>
-    </ProvideAuth>
   );
 }
 
 function ProtectedRoute({ children }) {
-  const auth = useAuth();
-  if (auth.user.name) {
+  const user = useSelector(selectUser);
+  if (Object.keys(user).length > 0) {
     return children;
   }
   return <Redirect to="/login" />

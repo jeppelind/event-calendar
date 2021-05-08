@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
-import { useAuth } from './utils/auth';
 import './EventList.css';
 import DeleteEventButton from './DeleteEventButton';
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/user/userSlice';
 
 const DATES = [
   'jan',
@@ -51,15 +52,15 @@ const fetchEvents = async (token) => {
 
 export const EventList = () => {
   const [events, setEvents] = useState([]);
-  const auth = useAuth();
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     const asyncFetch = async () => {
-      const result = await fetchEvents(auth.user.token);
+      const result = await fetchEvents(user.token);
       setEvents(result);
     }
     asyncFetch();
-  }, [auth.user.token]);
+  }, [user.token]);
 
   return (
     <div className="events-container">
