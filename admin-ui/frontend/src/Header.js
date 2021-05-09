@@ -1,8 +1,9 @@
 import React from 'react';
 import './Header.css';
-import { Dropdown, Grid } from 'semantic-ui-react';
+import { Container, Dropdown, Grid } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSignedOut, selectUser } from './features/user/userSlice';
+import { AddEventModal } from './features/events/AddEventModal';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -36,6 +37,9 @@ export default function Header() {
             }
           </Grid.Column>
       </Grid>
+      <Container>
+        <AddEventModal />
+      </Container>
     </div>
   );
 }

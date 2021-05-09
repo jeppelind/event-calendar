@@ -54,10 +54,14 @@ app.post('/graphql', bodyParser.json(), async (req, res) => {
         'Authorization': `Bearer ${req.body.token}`
       }
     });
+    if (!apiRes.ok) {
+      throw Error(apiRes.statusText);
+    }
     const json = await apiRes.json();
     res.send(json);
   } catch (err) {
     console.error(err)
+    console.log(req.body.query)
     res.status(500).send(err);
   }
 })

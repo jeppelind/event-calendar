@@ -34,6 +34,7 @@ export default function DeleteEventButton({ id }) {
     <>
       <Button className='ui icon button' onClick={show}><i aria-hidden='true' className='trash icon'></i></Button>
       <Modal
+        size='tiny'
         className='modal-darkmode'
         dimmer='blurring'
         open={isOpen}

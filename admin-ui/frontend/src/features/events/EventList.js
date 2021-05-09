@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Grid, Button, Placeholder } from 'semantic-ui-react';
+import { Grid, Placeholder } from 'semantic-ui-react';
 import './EventList.css';
 import DeleteEventButton from './DeleteEventButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserToken } from '../user/userSlice';
 import { fetchEvents, selectEventById, selectEventIds, selectEventsStatus } from './eventsSlice';
+import { EditEventModal } from './EditEventModal';
 
 const DATES = [
   'jan',
@@ -77,7 +78,7 @@ const EventListItem = ({ eventId }) => {
             <span className="description">{event.description}</span>
           </Grid.Column>
           <Grid.Column mobile={6} tablet={6} computer={3} largeScreen={2} className='item-buttons'>
-            <Button color='purple'>Edit</Button>
+            <EditEventModal eventId={event.id} />
             <DeleteEventButton id={event.id}></DeleteEventButton>
           </Grid.Column>
         </Grid.Row>

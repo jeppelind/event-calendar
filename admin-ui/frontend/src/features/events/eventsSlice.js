@@ -8,6 +8,19 @@ const initialState = eventsAdapter.getInitialState({
   status: 'idle'
 });
 
+const fetchGraphQL = async (query, token) => {
+  const response = await fetch('/graphql', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, token })
+  });
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  const result = await response.json();
+  return result;
+}
+
 export const fetchEvents = createAsyncThunk('events/fetchEvents', async (userToken) => {
   const query = `
     {
@@ -19,15 +32,7 @@ export const fetchEvents = createAsyncThunk('events/fetchEvents', async (userTok
         endDate
       }
     }`;
-  const response = await fetch('/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, token: userToken })
-  });
-  if (!response.ok) {
-    throw Error(response.statusText);
-  }
-  const result = await response.json();
+  const result = await fetchGraphQL(query, userToken);
   return result.data.getUpcomingEvents;
 });
 
@@ -37,16 +42,41 @@ export const deleteEvent = createAsyncThunk('events/deleteEvent', async (inputDa
     mutation {
       deleteEvent(id: "${eventId}")
     }`;
-  const response = await fetch('/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, token: userToken })
-  });
-  if (!response.ok) {
-    throw Error(response.statusText);
-  }
-  const result = await response.json();
+  const result = await fetchGraphQL(query, userToken);
   return result.data.deleteEvent;
+});
+
+export const addEvent = createAsyncThunk('events/addEvent', async (inputData) => {
+  const { title, description, startDate, endDate, userToken } = inputData;
+  const endDateData = endDate !== '' ? endDate : startDate;
+  const query = `
+    mutation {
+      createEvent(input: {name: "${title}", description: "${description}", startDate: "${startDate}", endDate: "${endDateData}"}) {
+        id
+        name
+        description
+        startDate
+        endDate
+      }
+    }`;
+  const result = await fetchGraphQL(query, userToken);
+  return result.data.createEvent;
+});
+
+export const updateEvent = createAsyncThunk('events/updateEvent', async (inputData) => {
+  const { eventId, title, description, startDate, endDate, userToken } = inputData;
+  const query = `
+    mutation {
+      updateEvent(id: "${eventId}", input: {name: "${title}", description: "${description}", startDate: "${startDate}", endDate: "${endDate}"}) {
+        id
+        name
+        description
+        startDate
+        endDate
+      }
+    }`;
+  const result = await fetchGraphQL(query, userToken);
+  return result.data.updateEvent;
 });
 
 const eventsSlice = createSlice({
@@ -64,9 +94,9 @@ const eventsSlice = createSlice({
     builder.addCase(fetchEvents.rejected, (state) => {
       state.status = 'rejected';
     });
-    builder.addCase(deleteEvent.fulfilled, (state, action) => {
-      eventsAdapter.removeOne(state, action.payload);
-    })
+    builder.addCase(deleteEvent.fulfilled, eventsAdapter.removeOne);
+    builder.addCase(addEvent.fulfilled, eventsAdapter.upsertOne);
+    builder.addCase(updateEvent.fulfilled, eventsAdapter.upsertOne);
   }
 });
 
