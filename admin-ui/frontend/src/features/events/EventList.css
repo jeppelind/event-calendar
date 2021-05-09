@@ -44,3 +44,10 @@
     text-align: left;
   }
 }
+
+.ui.inverted.placeholder,
+.ui.inverted.placeholder .line,
+.ui.inverted.placeholder .line:after,
+.ui.inverted.placeholder .paragraph:before {
+  background-color: rgb(46, 46, 46);
+}
