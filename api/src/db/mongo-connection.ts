@@ -29,7 +29,7 @@ const createEvent = async (name: string, startDate: string, endDate?: string, de
 
 const deleteEvent = async (id: string) => {
   const result = await EventDBModel.deleteOne({ _id: id });
-  return result.deletedCount;
+  return result.deletedCount > 0 ? id : '';
 }
 
 const updateEvent = async (id: string, name: string, startDate: string, endDate?: string, description?: string) => {
@@ -38,8 +38,10 @@ const updateEvent = async (id: string, name: string, startDate: string, endDate?
     description,
     startDate: new Date(startDate),
     endDate: (endDate) ? new Date(endDate) : new Date(startDate),
+  }, {
+    new: true,
   });
-  return document ? document.id : null;
+  return document ? document.toObject() : null;
 }
 
 const getUpcomingEvents = async () => {

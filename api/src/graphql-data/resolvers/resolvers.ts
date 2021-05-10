@@ -20,13 +20,13 @@ export const resolvers: Resolvers = {
     },
     deleteEvent: async (parent, args, request) => {
       authorize(request.user.role, Roles.WRITE);
-      const deletionCount = await db.deleteEvent(args.id);
-      return deletionCount;
+      const deletedId = await db.deleteEvent(args.id);
+      return deletedId;
     },
     updateEvent: async (parent, args, request) => {
       authorize(request.user.role, Roles.WRITE);
-      const updatedDocumentId = await db.updateEvent(args.id, args.input.name, args.input.startDate, args.input.endDate, args.input.description);
-      return updatedDocumentId;
+      const eventObj: EventModel = await db.updateEvent(args.id, args.input.name, args.input.startDate, args.input.endDate, args.input.description);
+      return eventObj;
     },
   },
   Event: {

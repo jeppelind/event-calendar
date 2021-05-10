@@ -105,12 +105,13 @@ describe('API', () => {
     });
 
     it('deleteEvent', async () => {
-      const stub = sinon.stub(db, 'deleteEvent').resolves(1);
+      const id = '5f63c58c2656c38e30714929';
+      const stub = sinon.stub(db, 'deleteEvent').resolves(id);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       mutation {
-        deleteEvent(id: "5f63c58c2656c38e30714929")
+        deleteEvent(id: "${id}")
       }`;
       const result = await request(server)
         .post(`/graphql?query=${query}`)
@@ -119,19 +120,26 @@ describe('API', () => {
       stub.restore();
       stub2.restore();
 
-      const expected = { data: { deleteEvent: 1 } };
+      const expected = { data: { deleteEvent: id } };
       expect(result).to.have.status(200);
       expect(result.body).to.deep.equal(expected);
     });
 
     it('updateEvent', async () => {
-      const fakeData = '12345';
+      const fakeData = {
+        _id: '12345',
+        name: 'Testname',
+        startDate: '2020-12-24'
+      };
       const stub = sinon.stub(db, 'updateEvent').resolves(fakeData);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
 
       const query = `
       mutation {
-        updateEvent(id: "${fakeData}", input: { name: "New name" })
+        updateEvent(id: "${fakeData._id}", input: { name: "${fakeData.name}" }) {
+          id,
+          name
+        }
       }`;
       const result = await request(server)
         .post(`/graphql?query=${query}`)
@@ -140,7 +148,7 @@ describe('API', () => {
       stub.restore();
       stub2.restore();
 
-      const expected = { data: { updateEvent: fakeData } }
+      const expected = { data: { updateEvent: { id: fakeData._id, name: fakeData.name } } }
       expect(result).to.have.status(200);
       expect(result.body).to.deep.equal(expected);
     });

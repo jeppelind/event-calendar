@@ -34,7 +34,7 @@ describe('mongo-connection.ts', () => {
   });
 
   describe('deleteEvent()', () => {
-    it('deletes event based on id and returns number of deleted items', async () => {
+    it('deletes event based on id and returns deleted item id', async () => {
       const fakeData = {
         name: 'Test',
         startDate: Date.now(),
@@ -42,17 +42,17 @@ describe('mongo-connection.ts', () => {
       const doc = await EventDBModel.create(fakeData);
 
       const result = await db.deleteEvent(doc.id);
-      expect(result).to.equal(1);
+      expect(result).to.equal(doc.id);
     });
 
-    it('returns zero deletion count when id is not found', async () => {
+    it('returns empty string when id is not found', async () => {
       const result = await db.deleteEvent('5f620394e465321e1e210fa0');
-      expect(result).to.equal(0);
+      expect(result).to.equal('');
     });
   });
 
   describe('updateEvent()', () => {
-    it('updates existing event', async () => {
+    it('updates existing event and returns event', async () => {
       const fakeData = {
         name: 'Test',
         description: 'Test desc',
@@ -61,8 +61,15 @@ describe('mongo-connection.ts', () => {
       }
       const doc = await EventDBModel.create(fakeData);
 
-      const result = await db.updateEvent(doc.id, 'Test2', '2020-10-24', '2020-10-26', 'Test desc 2');
+      const updateData = {
+        name: 'Test2',
+        description: 'Test desc 2',
+        startDate: '2020-10-24',
+        endDate: '2020-10-26'
+      }
+      const result = await db.updateEvent(doc.id, updateData.name, updateData.startDate, updateData.endDate, updateData.description);
       expect(result.errors).to.be.undefined;
+      expect(result).excluding(['__v', '_id', 'startDate', 'endDate']).to.deep.equal(updateData);
     });
 
     it('returns null when no item is found', async () => {
