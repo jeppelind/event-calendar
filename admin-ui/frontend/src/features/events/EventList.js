@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Grid, Placeholder } from 'semantic-ui-react';
+import { Container, Grid, Placeholder } from 'semantic-ui-react';
 import './EventList.css';
 import DeleteEventButton from './DeleteEventButton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,24 +36,13 @@ export const EventList = () => {
   let content;
   if (status === 'pending') {
     content =
-    <Grid centered container>
-      <Grid.Column stretched mobile={16} tablet={12} computer={9} largeScreen={8}>
-      <Placeholder fluid inverted>
-        <Placeholder.Header>
-          <Placeholder.Line />
-        </Placeholder.Header>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder>
-      </Grid.Column>
-    </Grid>
+      <Container text>
+        <PlaceholderItems />
+      </Container>
   } else if (status === 'completed') {
     content = eventIds.map(eventId => (
       <EventListItem key={eventId} eventId={eventId} />
-    ))
+    ));
   }
 
   return (
@@ -63,21 +52,36 @@ export const EventList = () => {
   );
 }
 
+const PlaceholderItems = () => {
+  return (
+    <Placeholder fluid inverted>
+        <Placeholder.Header>
+          <Placeholder.Line />
+        </Placeholder.Header>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+      </Placeholder>
+  )
+}
+
 const EventListItem = ({ eventId }) => {
   const event = useSelector(state => selectEventById(state, eventId));
   const formatedDate = formatDate(event.startDate, event.endDate);
   return (
     <div className="event-item">
-      <Grid stackable centered container columns={3}>
+      <Grid centered container columns={3}>
         <Grid.Row>
-          <Grid.Column stretched mobile={16} tablet={4} computer={3} largeScreen={2}>
+          <Grid.Column stretched mobile={16} tablet={3} computer={3} largeScreen={2}>
             <span className="date">{formatedDate}</span>
           </Grid.Column>
-          <Grid.Column stretched mobile={16} tablet={12} computer={9} largeScreen={8}>
+          <Grid.Column stretched mobile={10} tablet={10} computer={9} largeScreen={8}>
             <span className="title">{event.name}</span>
             <span className="description">{event.description}</span>
           </Grid.Column>
-          <Grid.Column mobile={6} tablet={6} computer={3} largeScreen={2} className='item-buttons'>
+          <Grid.Column mobile={6} tablet={3} computer={3} largeScreen={2} className='item-buttons'>
             <EditEventModal eventId={event.id} />
             <DeleteEventButton id={event.id}></DeleteEventButton>
           </Grid.Column>

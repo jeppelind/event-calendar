@@ -47,7 +47,7 @@ export const EditEventModal = ({ eventId }) => {
 
   return (
     <>
-      <Button color='purple' onClick={show}>Edit</Button>
+      <Button color='purple' size='tiny' onClick={show}>Edit</Button>
       <Modal size='small' className='modal-darkmode' dimmer='blurring' open={isOpen} onClose={close}>
         <Modal.Header>
           Edit event

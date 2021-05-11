@@ -32,7 +32,7 @@ export default function DeleteEventButton({ id }) {
 
   return (
     <>
-      <Button className='ui icon button' onClick={show}><i aria-hidden='true' className='trash icon'></i></Button>
+      <Button className='ui icon button' size='tiny' onClick={show}><i aria-hidden='true' className='trash icon'></i></Button>
       <Modal
         size='tiny'
         className='modal-darkmode'

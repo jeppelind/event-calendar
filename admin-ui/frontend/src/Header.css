@@ -2,6 +2,11 @@
   font-family: 'Poppins', -apple-system, 'Helvetica Neue',
     sans-serif;
   padding-top: 2rem;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: rgb(46, 46, 46);
+  z-index: 1;
 }
 
 .top-header h3 {
@@ -15,4 +20,8 @@
 
 .right-info {
   padding: 1rem 2rem 0;
+}
+
+.sub-header {
+  margin: 1rem;
 }

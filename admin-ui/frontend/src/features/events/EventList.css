@@ -1,11 +1,10 @@
 .events-container {
-  padding-top: 3rem;
 }
 
 .event-item .date {
   font-weight: 700;
   font-size: 1.1rem;
-  text-align: center;
+  text-align: right;
 }
 .event-item:hover .date {
   color: rgb(243, 232, 186);
@@ -14,7 +13,7 @@
 .event-item .title {
   font-weight: 400;
   font-size: 1.3rem;
-  text-align: center;
+  text-align: left;
 }
 
 .event-item .description {
@@ -23,7 +22,7 @@
   color: rgb(211, 211, 211);
   margin-bottom: 1rem;
   margin-top: 0.4rem;
-  text-align: center;
+  text-align: left;
 }
 
 .event-item .item-buttons {
@@ -35,13 +34,17 @@
   opacity: 1;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (max-width: 767px) {
   .event-item .date {
-    text-align: right;
+    text-align: left;
   }
 
   .event-item .title, .event-item .description {
     text-align: left;
+  }
+
+  .event-item .item-buttons {
+    opacity: 1;
   }
 }
 

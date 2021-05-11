@@ -49,7 +49,7 @@ export const AddEventModal = () => {
 
   return (
     <>
-      <Button color='purple' onClick={show}>New event</Button>
+      <Button color='purple' floated='right' onClick={show}>New event</Button>
       <Modal size='small' className='modal-darkmode' dimmer='blurring' open={isOpen} onClose={close}>
         <Modal.Header>
           Add new event
