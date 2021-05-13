@@ -1,17 +1,24 @@
 .top-header {
   font-family: 'Poppins', -apple-system, 'Helvetica Neue',
     sans-serif;
-  padding-top: 2rem;
+  padding-top: 1rem;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: rgb(46, 46, 46);
+  background-color: inherit;
   z-index: 1;
+}
+
+.top-header .header-logo {
+  width: 100%;
+  position: fixed;
+  text-align: center;
 }
 
 .top-header h3 {
   font-size: min(3vw, 3rem);
   font-weight: 600;
+  color: aliceblue;
 }
 
 .top-header b {
@@ -22,6 +29,28 @@
   padding: 1rem 2rem 0;
 }
 
+.top-header .ui.menu {
+  background-color: inherit;
+}
+
+.top-header .ui.menu .item {
+  color: inherit;
+}
+
+.top-header .ui.menu .item:hover {
+  color: rgb(235, 142, 235);
+}
+
+.top-header a {
+  color: black;
+}
+
 .sub-header {
   margin: 1rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .top-header .ui.menu .ui.dropdown .menu>.item {
+    margin: 8px 0 8px 0;
+  }
 }

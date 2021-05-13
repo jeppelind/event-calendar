@@ -30,7 +30,6 @@ export const EventList = () => {
 
   useEffect(() => {
     dispatch(fetchEvents(userToken));
-    console.log('run fetch')
   }, [dispatch, userToken]);
 
   let content;
