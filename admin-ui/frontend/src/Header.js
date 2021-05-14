@@ -19,24 +19,33 @@ export default function Header() {
   return (
     <div className='top-header'>
       <div className='header-logo'>
-        <Link to='/'>
-          <h3>Evenemangskalendern <b>Admin</b></h3>
-        </Link>
+        <h3>Evenemangskalendern <b>Admin</b></h3>
       </div>
       { user.name &&
         <>
           <Menu stackable>
             <Menu.Menu position='right'>
-              <Dropdown item text={`Welcome, ${user.name}`} button floating>
+              <Dropdown item text={`Hi, ${user.name}`} button floating>
                 <Dropdown.Menu>
                   <Dropdown.Header content={user.name} />
                   <Dropdown.Divider />
-                  <Link to='/addUser'>
+                  <Link to='/'>
                     <Dropdown.Item>
-                      <Icon name='user plus' /> Add new user
+                      <Icon name='home' /> Start
                     </Dropdown.Item>
                   </Link>
-                  <Dropdown.Item icon='sign-out' text='Logout' onClick={logout} />
+                  { user.role > 1 &&
+                    <Link to='/addUser'>
+                      <Dropdown.Item>
+                        <Icon name='user plus' /> Add new user
+                      </Dropdown.Item>
+                    </Link>
+                  }
+                  <Link to='/' onClick={logout}>
+                    <Dropdown.Item>
+                      <Icon name='sign-out' /> Logout
+                    </Dropdown.Item>
+                  </Link>
                 </Dropdown.Menu>
               </Dropdown>
             </Menu.Menu>

@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-h1, h2, h3, h4, h5, h6, .ui.form input[type=text], .ui.button {
+h1, h2, h3, h4, h5, h6, .ui.form input[type=text], .ui.button, label {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Helvetica Neue',
     sans-serif;
@@ -23,6 +23,6 @@ a {
   color: rgb(216, 103, 216);
 }
 
-.ui.form .field>label {
+.ui.form .field>label, .ui.form .inline.fields>label, .ui.form .checkbox label {
   color: rgb(240, 240, 240);
 }

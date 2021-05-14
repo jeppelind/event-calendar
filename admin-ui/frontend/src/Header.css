@@ -1,6 +1,6 @@
 .top-header {
-  font-family: 'Poppins', -apple-system, 'Helvetica Neue',
-    sans-serif;
+  /* font-family: 'Poppins', -apple-system, 'Helvetica Neue',
+    sans-serif; */
   padding-top: 1rem;
   position: -webkit-sticky;
   position: sticky;
@@ -49,8 +49,13 @@
   margin: 1rem;
 }
 
+.sub-header .ui.statistic .value {
+  font-family: 'Poppins', -apple-system, 'Helvetica Neue',
+  sans-serif;
+}
+
 @media only screen and (max-width: 767px) {
-  .top-header .ui.menu .ui.dropdown .menu>.item {
-    margin: 8px 0 8px 0;
+  .top-header .ui.menu .ui.dropdown .menu .item {
+    margin: 0 0 8px 0;
   }
 }
