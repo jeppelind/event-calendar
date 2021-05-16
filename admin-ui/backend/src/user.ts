@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import dbWrapper from "./db-wrapper"
 
-interface User {
+export interface User {
     _id: string,
     name: string,
     email: string,
@@ -11,23 +11,46 @@ interface User {
     role: number,
 }
 
-export const getUserObject = async (email: string, password: string) => {
-    const user = await dbWrapper.getUser(email) as User;
-    if (!user)
-        throw Error('User not found.');
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch)
-        throw Error('Incorrect password.');
-    if (!user.role || user.role < 1)
-        throw Error('Access denied.');
-    return {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        token: user.token,
-        role: user.role,
-    }
+export const getUserByEmail = async (email: string) => {
+  const user = await dbWrapper.getUser(email) as User;
+  return user;
 }
+
+export const getUserById = async (id: string) => {
+  const user = await dbWrapper.getUserById(id) as User;
+  return user;
+}
+
+export const validatePassword = async (password: string, actualPassword: string) => {
+  const passwordMatch = await bcrypt.compare(password, actualPassword);
+  return passwordMatch;
+}
+
+export const getUserData = (requestUser: User) => {
+  return {
+    name: requestUser.name,
+    email: requestUser.email,
+    role: requestUser.role,
+  }
+}
+
+// export const getUserObject = async (email: string, password: string) => {
+//     const user = await dbWrapper.getUser(email) as User;
+//     if (!user)
+//         throw Error('User not found.');
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+//     if (!passwordMatch)
+//         throw Error('Incorrect password.');
+//     if (!user.role || user.role < 1)
+//         throw Error('Access denied.');
+//     return {
+//         id: user._id,
+//         name: user.name,
+//         email: user.email,
+//         token: user.token,
+//         role: user.role,
+//     }
+// }
 
 export const createNewUser = async (email: string, password: string, role: number, name?: string) => {
     const token = uuidv4();

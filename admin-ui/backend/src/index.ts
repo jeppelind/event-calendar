@@ -3,7 +3,51 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { createMongoConnection } from './db-wrapper';
-import { changeUserPassword, createNewUser, getUserObject } from './user';
+import { changeUserPassword, createNewUser, getUserByEmail, getUserById, getUserData, validatePassword, User } from './user';
+// import passport from 'passport';
+// import { Strategy as LocalStrategy} from 'passport-local';
+import session from 'express-session';
+import { passport, authenticateUserMiddleware } from './authentication';
+
+// const authenticateUserMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//   if (!req.isAuthenticated()) {
+//     res.status(403).send();
+//   } else {
+//     next();
+//   }
+// }
+
+// passport.use(new LocalStrategy({
+//     usernameField: 'email',
+//   },
+//   async (username, password, done) => {
+//     try {
+//       const user = await getUserByEmail(username);
+//       if (!user) {
+//         return done(null, false, { message: 'User not found.' });
+//       }
+//       const validPassword = await validatePassword(password, user.password);
+//       if (!validPassword) {
+//         return done(null, false, { message: 'Incorrect password.' });
+//       }
+//       return done(null, user);
+//     } catch (err) {
+//       return done(err);
+//     }
+//   }
+// ));
+
+// passport.serializeUser((user, done) => {
+//   done(null, (<User>user)._id);
+// });
+
+// passport.deserializeUser(async (id: string, done) => {
+//   const user = await getUserById(id);
+//   if (!user) {
+//     return done(null, false);
+//   }
+//   done(null, user);
+// });
 
 const app = express();
 
@@ -11,20 +55,32 @@ if (process.env.NODE_ENV === 'dev') {
   app.use(cors({ origin: 'http://localhost:3000' }));
 }
 
-app.get('/', (req, res) => {
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60
+  }
+}));
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/', authenticateUserMiddleware, (req, res) => {
   res.send('test site');
 });
 
-app.post('/login', bodyParser.json(), async (req, res) => {
-  try {
-    const user = await getUserObject(req.body.email, req.body.password);
-    res.send(JSON.stringify(user));
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/user/get'
+}));
 
-app.post('/addUser', bodyParser.json(), async (req, res) => {
+app.get('/user/get', authenticateUserMiddleware, (req, res) => {
+  const userData = getUserData(req.user as User);
+  res.send(userData);
+})
+
+app.post('/user/add', authenticateUserMiddleware, async (req, res) => {
   try {
     const newUserId = await createNewUser(req.body.email, req.body.password, req.body.role, req.body.name);
     res.send(newUserId);
@@ -34,7 +90,7 @@ app.post('/addUser', bodyParser.json(), async (req, res) => {
   }
 });
 
-app.post('/changePassword', bodyParser.json(), async (req, res) => {
+app.post('/user/changePassword', authenticateUserMiddleware, async (req, res) => {
   try {
     const result = await changeUserPassword(req.body.id, req.body.password, req.body.newPassword);
     res.send(result);
@@ -44,14 +100,15 @@ app.post('/changePassword', bodyParser.json(), async (req, res) => {
   }
 });
 
-app.post('/graphql', bodyParser.json(), async (req, res) => {
+app.post('/graphql', authenticateUserMiddleware, async (req, res) => {
   try {
+    const { token } = req.user as User;
     const apiRes = await fetch(`${process.env.API_URL}/graphql`, {
       method: 'POST',
       body: JSON.stringify({ query: req.body.query }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${req.body.token}`
+        'Authorization': `Bearer ${token}`
       }
     });
     if (!apiRes.ok) {
