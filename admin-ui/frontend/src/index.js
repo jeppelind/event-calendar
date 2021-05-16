@@ -6,6 +6,9 @@ import store from './app/store';
 import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { getUserSession } from './features/user/userSlice';
+
+store.dispatch(getUserSession());
 
 ReactDOM.render(
   <React.StrictMode>

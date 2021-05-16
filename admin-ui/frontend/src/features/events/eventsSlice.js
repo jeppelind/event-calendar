@@ -8,11 +8,11 @@ const initialState = eventsAdapter.getInitialState({
   status: 'idle'
 });
 
-const fetchGraphQL = async (query, token) => {
+const fetchGraphQL = async (query) => {
   const response = await fetch('/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, token })
+    body: JSON.stringify({ query })
   });
   if (!response.ok) {
     throw Error(response.statusText);
@@ -21,7 +21,7 @@ const fetchGraphQL = async (query, token) => {
   return result;
 }
 
-export const fetchEvents = createAsyncThunk('events/fetchEvents', async (userToken) => {
+export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
   const query = `
     {
       getUpcomingEvents {
@@ -32,22 +32,22 @@ export const fetchEvents = createAsyncThunk('events/fetchEvents', async (userTok
         endDate
       }
     }`;
-  const result = await fetchGraphQL(query, userToken);
+  const result = await fetchGraphQL(query);
   return result.data.getUpcomingEvents;
 });
 
 export const deleteEvent = createAsyncThunk('events/deleteEvent', async (inputData) => {
-  const { eventId, userToken } = inputData;
+  const { eventId } = inputData;
   const query = `
     mutation {
       deleteEvent(id: "${eventId}")
     }`;
-  const result = await fetchGraphQL(query, userToken);
+  const result = await fetchGraphQL(query);
   return result.data.deleteEvent;
 });
 
 export const addEvent = createAsyncThunk('events/addEvent', async (inputData) => {
-  const { title, description, startDate, endDate, userToken } = inputData;
+  const { title, description, startDate, endDate } = inputData;
   const endDateData = endDate !== '' ? endDate : startDate;
   const query = `
     mutation {
@@ -59,12 +59,12 @@ export const addEvent = createAsyncThunk('events/addEvent', async (inputData) =>
         endDate
       }
     }`;
-  const result = await fetchGraphQL(query, userToken);
+  const result = await fetchGraphQL(query);
   return result.data.createEvent;
 });
 
 export const updateEvent = createAsyncThunk('events/updateEvent', async (inputData) => {
-  const { eventId, title, description, startDate, endDate, userToken } = inputData;
+  const { eventId, title, description, startDate, endDate } = inputData;
   const query = `
     mutation {
       updateEvent(id: "${eventId}", input: {name: "${title}", description: "${description}", startDate: "${startDate}", endDate: "${endDate}"}) {
@@ -75,7 +75,7 @@ export const updateEvent = createAsyncThunk('events/updateEvent', async (inputDa
         endDate
       }
     }`;
-  const result = await fetchGraphQL(query, userToken);
+  const result = await fetchGraphQL(query);
   return result.data.updateEvent;
 });
 
