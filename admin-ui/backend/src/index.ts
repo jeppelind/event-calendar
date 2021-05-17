@@ -3,51 +3,9 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { createMongoConnection } from './db-wrapper';
-import { changeUserPassword, createNewUser, getUserByEmail, getUserById, getUserData, validatePassword, User } from './user';
-// import passport from 'passport';
-// import { Strategy as LocalStrategy} from 'passport-local';
+import { changeUserPassword, createNewUser, getUserData, User } from './user';
 import session from 'express-session';
 import { passport, authenticateUserMiddleware } from './authentication';
-
-// const authenticateUserMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-//   if (!req.isAuthenticated()) {
-//     res.status(403).send();
-//   } else {
-//     next();
-//   }
-// }
-
-// passport.use(new LocalStrategy({
-//     usernameField: 'email',
-//   },
-//   async (username, password, done) => {
-//     try {
-//       const user = await getUserByEmail(username);
-//       if (!user) {
-//         return done(null, false, { message: 'User not found.' });
-//       }
-//       const validPassword = await validatePassword(password, user.password);
-//       if (!validPassword) {
-//         return done(null, false, { message: 'Incorrect password.' });
-//       }
-//       return done(null, user);
-//     } catch (err) {
-//       return done(err);
-//     }
-//   }
-// ));
-
-// passport.serializeUser((user, done) => {
-//   done(null, (<User>user)._id);
-// });
-
-// passport.deserializeUser(async (id: string, done) => {
-//   const user = await getUserById(id);
-//   if (!user) {
-//     return done(null, false);
-//   }
-//   done(null, user);
-// });
 
 const app = express();
 
@@ -60,20 +18,25 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60
+    maxAge: 1000 * 60 * 60 * 24
   }
 }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', authenticateUserMiddleware, (req, res) => {
+app.get('/', (req, res) => {
   res.send('test site');
 });
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/user/get'
 }));
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.status(200).send();
+});
 
 app.get('/user/get', authenticateUserMiddleware, (req, res) => {
   const userData = getUserData(req.user as User);

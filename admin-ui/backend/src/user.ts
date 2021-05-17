@@ -34,24 +34,6 @@ export const getUserData = (requestUser: User) => {
   }
 }
 
-// export const getUserObject = async (email: string, password: string) => {
-//     const user = await dbWrapper.getUser(email) as User;
-//     if (!user)
-//         throw Error('User not found.');
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-//     if (!passwordMatch)
-//         throw Error('Incorrect password.');
-//     if (!user.role || user.role < 1)
-//         throw Error('Access denied.');
-//     return {
-//         id: user._id,
-//         name: user.name,
-//         email: user.email,
-//         token: user.token,
-//         role: user.role,
-//     }
-// }
-
 export const createNewUser = async (email: string, password: string, role: number, name?: string) => {
     const token = uuidv4();
     const hashedPwd = await bcrypt.hash(password, 10);

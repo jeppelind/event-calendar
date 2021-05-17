@@ -37,7 +37,7 @@ passport.deserializeUser(async (id: string, done) => {
 
 const authenticateUserMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (!req.isAuthenticated()) {
-    res.status(403).send();
+    res.status(401).send();
   } else {
     next();
   }
