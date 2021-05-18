@@ -33,7 +33,7 @@ export default function Login() {
     return () => {};
   }, [email, password]);
 
-  if (Object.keys(user).length > 0) {
+  if (user.name) {
     return <Redirect to="/" />
   } else {
     return (
