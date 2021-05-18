@@ -3,7 +3,7 @@ import chaiExclude from 'chai-exclude';
 import bcrypt from 'bcrypt';
 import dbWrapper from './db-wrapper';
 import sinon from 'sinon';
-import { changeUserPassword, createNewUser, getUserObject } from './user';
+import { changeUserPassword, createNewUser, getUserByEmail, getUserById, validatePassword } from './user';
 
 use(chaiExclude);
 
@@ -18,61 +18,35 @@ const fakeData = {
 }
 
 describe('user.ts', () => {
-  describe('getUserObject', () => {
-    it('returns user object', async () => {
-        const stub = sinon.stub(dbWrapper, 'getUser').resolves(fakeData);
-        const result = await getUserObject('test@test.com', 'abc123');
+  describe('getUserByEmail', () => {
+    it('returns user object with given email', async () => {
+      const stub = sinon.stub(dbWrapper, 'getUser').resolves(fakeData);
+      const result = await getUserByEmail('test@test.com');
+      stub.restore();
 
-        stub.restore();
+      expect(result).excluding(['__v']).to.deep.equal(fakeData);
+    });
+  });
 
-        const expected = { id: fakeData._id, email: fakeData.email, name: fakeData.name, token: fakeData.token };
-        expect(result).to.deep.equal(expected);
+  describe('getUserById', () => {
+    it('returns user object with given id', async () => {
+      const stub = sinon.stub(dbWrapper, 'getUserById').resolves(fakeData);
+      const result = await getUserById('123');
+      stub.restore();
+
+      expect(result).excluding(['__v']).to.deep.equal(fakeData);
+    });
+  });
+
+  describe('validatePassword', () => {
+    it('returns true if password is correct', async () => {
+      const result = await validatePassword('abc123', fakeData.password);
+      expect(result).to.be.true;
     });
 
-    it('throws error when no user is found', async () => {
-        const stub = sinon.stub(dbWrapper, 'getUser').resolves(null);
-        let result = null;
-        try {
-            await getUserObject('test@test.com', 'abc123');
-        } catch (err) {
-            result = err;
-        }
-
-        stub.restore();
-
-        expect(result).to.be.an('Error')
-        expect(result.message).to.equal('User not found.');
-    });
-
-    it('throws error when password is wrong', async () => {
-        const stub = sinon.stub(dbWrapper, 'getUser').resolves(fakeData);
-        let result = null;
-        try {
-            await getUserObject('test@test.com', 'abc124');
-        } catch (err) {
-            result = err;
-        }
-
-        stub.restore();
-
-        expect(result).to.be.an('Error')
-        expect(result.message).to.equal('Incorrect password.');
-    });
-
-    it('throws error when user lacks access', async () => {
-        const testData = { ...fakeData, ...{ role: 0 } }
-        const stub = sinon.stub(dbWrapper, 'getUser').resolves(testData);
-        let result = null;
-        try {
-            await getUserObject('test@test.com', 'abc123');
-        } catch (err) {
-            result = err;
-        }
-
-        stub.restore();
-
-        expect(result).to.be.an('Error')
-        expect(result.message).to.equal('Access denied.');
+    it('returns false if password is incorrect', async () => {
+      const result = await validatePassword('abc1234', fakeData.password);
+      expect(result).to.be.false;
     });
   });
 
@@ -102,7 +76,6 @@ describe('user.ts', () => {
   describe('changeUserPassword', () => {
     it('returns user id on success', async () => {
         const stub = sinon.stub(dbWrapper, 'getUserById').resolves(fakeData);
-        const updatedData = {...fakeData, ...{ password: 'abc456' }}
         const stub2 = sinon.stub(dbWrapper, 'changePassword').resolves(fakeData);
         const result = await changeUserPassword('123', 'abc123', 'abc456');
 

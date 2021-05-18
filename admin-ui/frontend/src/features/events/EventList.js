@@ -3,7 +3,6 @@ import { Container, Grid, Placeholder } from 'semantic-ui-react';
 import './EventList.css';
 import DeleteEventButton from './DeleteEventButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserToken } from '../user/userSlice';
 import { fetchEvents, selectEventById, selectEventIds, selectEventsStatus } from './eventsSlice';
 import { EditEventModal } from './EditEventModal';
 
@@ -24,13 +23,12 @@ const DATES = [
 
 export const EventList = () => {
   const dispatch = useDispatch();
-  const userToken = useSelector(selectUserToken);
   const status = useSelector(selectEventsStatus);
   const eventIds = useSelector(selectEventIds);
 
   useEffect(() => {
-    dispatch(fetchEvents(userToken));
-  }, [dispatch, userToken]);
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
   let content;
   if (status === 'pending') {

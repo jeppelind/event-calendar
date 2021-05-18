@@ -2,7 +2,7 @@ import React from 'react';
 import './Header.css';
 import { Container, Dropdown, Icon, Menu, Statistic } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSignedOut, selectUser } from './features/user/userSlice';
+import { selectUser, signOutUser } from './features/user/userSlice';
 import { AddEventModal } from './features/events/AddEventModal';
 import { selectEventIds } from './features/events/eventsSlice';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ export default function Header() {
   const eventIds = useSelector(selectEventIds);
 
   const logout = () => {
-    dispatch(userSignedOut());
+    dispatch(signOutUser());
   }
 
   return (

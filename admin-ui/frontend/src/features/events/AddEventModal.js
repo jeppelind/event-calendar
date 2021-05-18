@@ -1,8 +1,7 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { Button, Form, Modal } from "semantic-ui-react";
-import { selectUserToken } from "../user/userSlice";
 import { addEvent } from "./eventsSlice";
 
 export const AddEventModal = () => {
@@ -14,7 +13,6 @@ export const AddEventModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isInputValid, setIsInputValid] = useState(false);
-  const userToken = useSelector(selectUserToken);
 
   const show = () => setIsOpen(true);
   const close = () => {
@@ -34,7 +32,7 @@ export const AddEventModal = () => {
   const onSubmit = async (evt) => {
     try {
       setIsLoading(true);
-      const res = await dispatch(addEvent({ title, description, startDate, endDate, userToken }))
+      const res = await dispatch(addEvent({ title, description, startDate, endDate }))
       unwrapResult(res);
       close();
     } catch (err) {

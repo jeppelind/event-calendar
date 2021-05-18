@@ -1,20 +1,18 @@
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button, Dimmer, Loader, Modal } from 'semantic-ui-react';
-import { selectUserToken } from '../user/userSlice';
 import { deleteEvent } from './eventsSlice';
 
 export default function DeleteEventButton({ id }) {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const userToken = useSelector(selectUserToken);
 
   const confirm = async () => {
     try {
       setIsLoading(true);
-      const res = await dispatch(deleteEvent({ eventId: id, userToken }));
+      const res = await dispatch(deleteEvent({ eventId: id }));
       unwrapResult(res);
     } catch (err) {
       console.error(err.message);

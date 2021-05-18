@@ -2,12 +2,10 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { Button, Form, Modal } from "semantic-ui-react";
-import { selectUserToken } from "../user/userSlice";
 import { selectEventById, updateEvent } from "./eventsSlice";
 
 export const EditEventModal = ({ eventId }) => {
   const dispatch = useDispatch();
-  const userToken = useSelector(selectUserToken);
   const event = useSelector(state => selectEventById(state, eventId));
 
   const [title, setTitle] = useState(event.name);
@@ -32,7 +30,7 @@ export const EditEventModal = ({ eventId }) => {
   const onSubmit = async (evt) => {
     try {
       setIsLoading(true);
-      const res = await dispatch(updateEvent({ eventId, title, description, startDate, endDate, userToken }))
+      const res = await dispatch(updateEvent({ eventId, title, description, startDate, endDate }))
       unwrapResult(res);
       close();
     } catch (err) {
