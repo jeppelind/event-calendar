@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import { join } from 'path';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { createMongoConnection } from './db-wrapper';
@@ -12,6 +13,8 @@ const app = express();
 if (process.env.NODE_ENV === 'dev') {
   app.use(cors({ origin: 'http://localhost:3000' }));
 }
+
+app.use(express.static(join(__dirname, process.env.STATIC_ASSETS_PATH)));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -26,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-  res.send('test site');
+  res.sendFile(join(__dirname, process.env.STATIC_ASSETS_PATH, 'index.html'));
 });
 
 app.post('/login', passport.authenticate('local', {
