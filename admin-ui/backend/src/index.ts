@@ -7,6 +7,14 @@ import { createMongoConnection } from './db-wrapper';
 import { changeUserPassword, createNewUser, getUserData, User } from './user';
 import session from 'express-session';
 import { passport, authenticateUserMiddleware } from './authentication';
+import Redis from 'ioredis';
+import redisStore from 'connect-redis';
+
+const RedisStore = redisStore(session);
+const redis = new Redis({
+  port: parseInt(process.env.REDIS_PORT, 10),
+  host: process.env.REDIS_HOST
+});
 
 const app = express();
 
@@ -17,6 +25,7 @@ if (process.env.NODE_ENV === 'dev') {
 app.use(express.static(join(__dirname, process.env.STATIC_ASSETS_PATH)));
 
 app.use(session({
+  store: new RedisStore({ client: redis }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,

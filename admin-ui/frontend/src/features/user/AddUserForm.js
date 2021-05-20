@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button, Container, Form, Message } from "semantic-ui-react"
 
 const postNewUserData = async (name, email, password, role) => {
-  const response = await fetch('/addUser', {
+  const response = await fetch('/user/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, password, role })
