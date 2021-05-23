@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  labels:
+    app: event-client
+spec:
+  selector:
+    app: event-client
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-client
+  labels:
+    app: event-client
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: event-client
+  template:
+    metadata:
+      labels:
+        app: event-client
+    spec:
+      containers:
+      - name: event-client
+        image: event-client-ui:1.0.0
+        env:
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: client-config
+              key: api_url
+        - name: PUBLIC_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: client-config
+              key: token

@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+  labels:
+    app: event-admin
+spec:
+  selector:
+    app: event-admin
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-admin
+  labels:
+    app: event-admin
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: event-admin
+  template:
+    metadata:
+      labels:
+        app: event-admin
+    spec:
+      containers:
+      - name: event-admin
+        image: event-admin-ui:1.0.0-test8
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            configMapKeyRef:
+              name: admin-config
+              key: mongodb_uri
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: admin-config
+              key: redis_host
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: admin-config
+              key: redis_port
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: admin-config
+              key: api_url
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: admin-secret
+              key: redis_secret

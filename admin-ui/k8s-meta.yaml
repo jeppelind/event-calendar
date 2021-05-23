@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: admin-secret
+type: Opaque
+data:
+  redis_secret: AddSecretHere
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-config
+data:
+  api_url: http://api
+  mongodb_uri: 'mongodb://192.168.10.179:27017/event-calendar'
+  redis_host: '192.168.10.179'
+  redis_port: '6379'
