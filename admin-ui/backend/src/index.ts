@@ -24,16 +24,17 @@ if (process.env.NODE_ENV === 'dev') {
 
 app.use(express.static(join(__dirname, process.env.STATIC_ASSETS_PATH)));
 
+app.use(bodyParser.json());
 app.use(session({
   store: new RedisStore({ client: redis }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
+    secure: process.env.NODE_ENV === 'prod',
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
-app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 

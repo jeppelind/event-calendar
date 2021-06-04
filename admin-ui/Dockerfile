@@ -32,6 +32,7 @@ RUN npm install
 
 ENV PORT=8080
 ENV STATIC_ASSETS_PATH=../build
+ENV NODE_ENV=prod
 
 EXPOSE 8080
 CMD [ "npm", "start" ]
