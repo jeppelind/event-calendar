@@ -3,6 +3,7 @@ import { expect, request, use } from "chai";
 import chaiHttp = require("chai-http")
 import db from './db/mongo-connection';
 import sinon from 'sinon';
+import * as cache from './cache/cache';
 
 const authToken = process.env.TEST_AUTH_TOKEN
 
@@ -58,6 +59,8 @@ describe('API', () => {
       const fakeData = [{ name: 'Testname' }];
       const stub = sinon.stub(db, 'getUpcomingEvents').resolves(fakeData);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub3 = sinon.stub(cache, 'getEventCache').resolves(null);
+      const stub4 = sinon.stub(cache, 'setEventCache').resolves('OK');
 
       const query = `
       {
@@ -71,6 +74,8 @@ describe('API', () => {
 
       stub.restore();
       stub2.restore();
+      stub3.restore();
+      stub4.restore();
 
       const expected = { data: { getUpcomingEvents: fakeData } }
       expect(result).to.have.status(200);
@@ -84,6 +89,7 @@ describe('API', () => {
       };
       const stub = sinon.stub(db, 'createEvent').resolves(fakeData);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
       mutation {
@@ -98,6 +104,7 @@ describe('API', () => {
 
       stub.restore();
       stub2.restore();
+      stub3.restore();
 
       const expected = { data: { createEvent: fakeData } }
       expect(result).to.have.status(200);
@@ -108,6 +115,7 @@ describe('API', () => {
       const id = '5f63c58c2656c38e30714929';
       const stub = sinon.stub(db, 'deleteEvent').resolves(id);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
       mutation {
@@ -119,6 +127,7 @@ describe('API', () => {
 
       stub.restore();
       stub2.restore();
+      stub3.restore();
 
       const expected = { data: { deleteEvent: id } };
       expect(result).to.have.status(200);
@@ -133,6 +142,7 @@ describe('API', () => {
       };
       const stub = sinon.stub(db, 'updateEvent').resolves(fakeData);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
       mutation {
@@ -147,6 +157,7 @@ describe('API', () => {
 
       stub.restore();
       stub2.restore();
+      stub3.restore();
 
       const expected = { data: { updateEvent: { id: fakeData._id, name: fakeData.name } } }
       expect(result).to.have.status(200);
