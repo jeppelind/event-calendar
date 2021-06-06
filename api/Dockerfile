@@ -18,6 +18,7 @@ COPY package*.json ./
 RUN npm install --only=prod
 
 ENV PORT=8080
+ENV CACHE_EXPIRATION=14400
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

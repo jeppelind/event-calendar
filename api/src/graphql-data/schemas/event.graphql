@@ -9,7 +9,7 @@ type Event {
 }
 
 type Query {
-  getUpcomingEvents: [Event]
+  getUpcomingEvents(startIndex: Int, endIndex: Int): [Event]
 }
 
 input EventInput {

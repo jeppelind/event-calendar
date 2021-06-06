@@ -4,6 +4,7 @@ import db from "../../db/mongo-connection"
 import { authorize, Roles } from '../../permissions';
 import { clearEventCache, getEventCache, setEventCache } from '../../cache/cache';
 import { GraphQLScalarType } from 'graphql';
+import { getEventsSlice } from "../../utils";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -11,11 +12,11 @@ export const resolvers: Resolvers = {
       authorize(request.user.role, Roles.READ);
       const cachedEvents = await getEventCache();
       if (cachedEvents) {
-        return cachedEvents;
+        return getEventsSlice(cachedEvents, args.startIndex, args.endIndex);
       }
       const events: EventModel[] = await db.getUpcomingEvents();
       await setEventCache(events);
-      return events;
+      return getEventsSlice(events, args.startIndex, args.endIndex);
     }
   },
   Mutation: {
