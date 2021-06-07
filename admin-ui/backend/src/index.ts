@@ -18,7 +18,9 @@ const redis = new Redis({
 
 const app = express();
 
-if (process.env.NODE_ENV === 'dev') {
+if (process.env.NODE_ENV === 'prod') {
+  app.set('trust proxy', 1); // nginx proxy in k8s
+} else if (process.env.NODE_ENV === 'dev') {
   app.use(cors({ origin: 'http://localhost:3000' }));
 }
 
