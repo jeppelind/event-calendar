@@ -1,4 +1,7 @@
 .login {
-    margin-top: 25vh;
-  }
-  
+  margin-top: 25vh;
+}
+
+.back-link {
+  text-align: center;
+}

@@ -75,7 +75,7 @@ const EventListItem = ({ name, description, startDate, endDate }: EventListItemP
   const formatedDate = formatDate(startDate, endDate);
   return (
     <div className="event-item">
-      <Grid stackable centered container columns={2}>
+      <Grid centered container columns={2}>
         <Grid.Row stretched>
           <Grid.Column mobile={16} tablet={4} computer={3} largeScreen={2}>
             <span className="date">{formatedDate}</span>

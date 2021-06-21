@@ -1,7 +1,7 @@
 import './Login.css';
 import { useEffect, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
-import { Form, Grid, Message } from 'semantic-ui-react';
+import { Divider, Form, Grid, Message } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, signInUser } from './userSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -51,6 +51,10 @@ export default function Login() {
                 <Message error header='Problem signing in' content={error} />
                 <Form.Button disabled={!isInputValid} loading={isLoading} color='purple' fluid>Login</Form.Button>
               </Form>
+            </Grid.Row>
+            <Grid.Row className='back-link'>
+              <Divider></Divider>
+              <a href='https://evenemangskalendern.com'>Return to main site</a>
             </Grid.Row>
           </Grid.Column>
         </Grid>
