@@ -84,15 +84,18 @@ describe('mongo-connection.ts', () => {
         {
           name: 'Event 1',
           startDate: Date.now() + 10000,
+          endDate: Date.now() + 10000,
         },
         {
           name: 'Event 2',
-          startDate: Date.now() + 10000,
+          startDate: Date.now() - (1000 * 60 * 60 * 24),
+          endDate: Date.now() + 10000,
         }
         ,
         {
           name: 'Event 3',
-          startDate: Date.now() - 10000,
+          startDate: Date.now() - (1000 * 60 * 60 * 24), // Event yesterday
+          endDate: Date.now() - (1000 * 60 * 60 * 24),
         }
       ];
       await EventDBModel.create(fakeData);

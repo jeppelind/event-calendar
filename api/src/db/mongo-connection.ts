@@ -45,7 +45,8 @@ const updateEvent = async (id: string, name: string, startDate: string, endDate?
 }
 
 const getUpcomingEvents = async () => {
-  const res = await EventDBModel.find().where('startDate').gte(new Date()).sort({ startDate: 'ascending' });
+  const currentDate = new Date();
+  const res = await EventDBModel.find().where('endDate').gte(new Date(currentDate.toDateString())).sort({ startDate: 'ascending' });
   const objectArr = res.map(doc => doc.toObject());
   return objectArr;
 }

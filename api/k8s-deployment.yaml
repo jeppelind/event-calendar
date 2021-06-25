@@ -30,10 +30,15 @@ spec:
     spec:
       containers:
       - name: event-api
-        image: event-api:1.0.2
+        image: <docker_image>
         env:
         - name: MONGODB_URI
           valueFrom:
             configMapKeyRef:
               name: api-config
               key: mongodb_uri
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: redis_host

@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: api-config
 data:
-  mongodb_uri: 'mongodb://192.168.10.179:27017/event-calendar'
+  mongodb_uri: <mongo_host>
+  redis_host: <redis_service>
