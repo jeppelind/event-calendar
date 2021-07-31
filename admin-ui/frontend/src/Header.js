@@ -25,7 +25,7 @@ export default function Header() {
         <>
           <Menu stackable>
             <Menu.Menu position='right'>
-              <Dropdown item text={`Hi, ${user.name}`} button floating>
+              <Dropdown inverted item text={`Hi, ${user.name}`} button floating>
                 <Dropdown.Menu>
                   <Dropdown.Header content={user.name} />
                   <Dropdown.Divider />
@@ -52,7 +52,7 @@ export default function Header() {
           </Menu>
 
           <Container text className='sub-header'>
-            <Statistic horizontal inverted color='purple'>
+            <Statistic horizontal inverted>
               <Statistic.Value>{eventIds.length}</Statistic.Value>
               <Statistic.Label>Upcoming events</Statistic.Label>
             </Statistic>

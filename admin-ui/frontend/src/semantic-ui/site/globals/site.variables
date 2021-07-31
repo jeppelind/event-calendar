@@ -13,18 +13,19 @@
 
 
 @primaryColor: @green;
-@pageBackground: @darkGray;
 @textColor: aliceblue;
+@pageBackground: @darkGray;
 
 
 /*--- Input  ---*/
-@inputColor: @primaryColor;
-@inputPlaceholderColor: lighten(@inputColor, 75);
-@inputPlaceholderFocusColor: lighten(@inputColor, 45);
+@inputColor: @black;
+@inputPlaceholderColor: lighten(@inputColor, 50);
+@inputPlaceholderFocusColor: lighten(@inputColor, 25);
 
 @focusedFormBorderColor: @primaryColor;
 
 
+/*--- Links ---*/
 @linkColor: @primaryColor;
 @linkHoverColor: @linkColor;
 @linkHoverUnderline: underline;
@@ -32,5 +33,6 @@
 
 /*--- Color Definitions ---*/
 @pink: #c21eda;
-@green: #0dbc79;
+@green: #22b162;
 @darkGray: rgb(46, 46, 46);
+@black: #000000;
