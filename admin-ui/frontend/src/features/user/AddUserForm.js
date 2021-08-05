@@ -98,7 +98,7 @@ export const AddUserPage = () => {
           value={role}
           onChange={onRoleChanged}
         />
-        <Button loading={isLoading} color='purple' floated='right' onClick={onSubmit}>Submit</Button>
+        <Button primary loading={isLoading} floated='right' onClick={onSubmit}>Submit</Button>
       </Form>
     </Container>
   )

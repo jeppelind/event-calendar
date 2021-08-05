@@ -49,7 +49,7 @@ export default function Login() {
                 <Form.Input label='Email' name='email' value={email} onChange={(evt) => setEmail(evt.target.value)} />
                 <Form.Input label='Password' type='password' value={password} onChange={(evt) => setPassword(evt.target.value)} />
                 <Message error header='Problem signing in' content={error} />
-                <Form.Button disabled={!isInputValid} loading={isLoading} color='purple' fluid>Login</Form.Button>
+                <Form.Button primary disabled={!isInputValid} loading={isLoading} fluid>Login</Form.Button>
               </Form>
             </Grid.Row>
             <Grid.Row className='back-link'>

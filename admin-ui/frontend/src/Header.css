@@ -1,6 +1,4 @@
 .top-header {
-  /* font-family: 'Poppins', -apple-system, 'Helvetica Neue',
-    sans-serif; */
   padding-top: 1rem;
   position: -webkit-sticky;
   position: sticky;
@@ -29,29 +27,8 @@
   padding: 1rem 2rem 0;
 }
 
-.top-header .ui.menu {
-  background-color: inherit;
-}
-
-.top-header .ui.menu .item {
-  color: inherit;
-}
-
-.top-header .ui.menu .item:hover {
-  color: rgb(235, 142, 235);
-}
-
-.top-header a {
-  color: black;
-}
-
 .sub-header {
   margin: 1rem;
-}
-
-.sub-header .ui.statistic .value {
-  font-family: 'Poppins', -apple-system, 'Helvetica Neue',
-  sans-serif;
 }
 
 @media only screen and (max-width: 767px) {

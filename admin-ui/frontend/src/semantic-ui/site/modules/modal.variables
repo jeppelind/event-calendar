@@ -1,0 +1,6 @@
+@headerBackground: @pageBackground;
+@headerColor: @textColor;
+
+@contentBackground: @pageBackground;
+
+@actionBackground: @pageBackground;

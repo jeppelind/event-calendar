@@ -1,0 +1,17 @@
+@background: @pageBackground;
+@backgroundHover: lighten(@pageBackground, 10);
+@backgroundSelected: lighten(@pageBackground, 20);
+
+@borderWidth: 0px;
+@boxShadow: none;
+
+@dropdownBackground: @backgroundHover;
+
+@hoverItemBackground: @backgroundHover;
+@hoverItemTextColor: @textColor;
+
+@activeItemBackground: @backgroundSelected;
+@activeItemTextColor: @hoverItemTextColor;
+
+@activeHoverItemBackground: @backgroundSelected;
+@activeHoverItemColor: @hoverItemTextColor;

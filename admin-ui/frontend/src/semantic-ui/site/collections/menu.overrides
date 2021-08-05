@@ -1,0 +1,7 @@
+.ui.menu .ui.dropdown.item .menu .item:hover {
+  background-color: @backgroundSelected;
+}
+
+.ui.menu .ui.dropdown.item .menu a {
+  text-decoration: none;
+}

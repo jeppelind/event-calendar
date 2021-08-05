@@ -1,0 +1,11 @@
+@menuBorderWidth: 1px;
+@menuBorderColor: @primaryColor;
+@menuBorder: @menuBorderWidth solid @menuBorderColor;
+
+@menuHeaderColor: @primaryColor;
+
+@selectionHoverBorderColor: @primaryColor;
+
+@selectionTextColor: @darkGray;
+
+@itemColor: @darkGray;

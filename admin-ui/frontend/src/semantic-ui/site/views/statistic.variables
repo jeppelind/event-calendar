@@ -1,0 +1,3 @@
+@valueColor: @primaryColor;
+
+@invertedValueColor: @primaryColor;

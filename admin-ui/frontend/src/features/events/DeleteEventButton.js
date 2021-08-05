@@ -51,7 +51,7 @@ export default function DeleteEventButton({ id }) {
         </Modal.Content>
         <Modal.Actions className='modal-darkmode'>
           <Button onClick={cancel}>Cancel</Button>
-          <Button color='purple' onClick={confirm}>OK</Button>
+          <Button primary onClick={confirm}>OK</Button>
         </Modal.Actions>
       </Modal>
     </>

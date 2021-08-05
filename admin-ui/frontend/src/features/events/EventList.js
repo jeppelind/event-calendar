@@ -35,6 +35,7 @@ export const EventList = () => {
     content =
       <Container text>
         <PlaceholderItems />
+        <PlaceholderItems />
       </Container>
   } else if (status === 'completed') {
     content = eventIds.map(eventId => (

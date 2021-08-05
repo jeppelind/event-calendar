@@ -47,7 +47,7 @@ export const AddEventModal = () => {
 
   return (
     <>
-      <Button color='purple' floated='right' onClick={show}>New event</Button>
+      <Button primary floated='right' onClick={show}>New event</Button>
       <Modal size='small' className='modal-darkmode' dimmer='blurring' open={isOpen} onClose={close}>
         <Modal.Header>
           Add new event
@@ -75,7 +75,7 @@ export const AddEventModal = () => {
         </Modal.Content>
         <Modal.Actions className='modal-darkmode'>
           <Button onClick={close}>Cancel</Button>
-          <Button disabled={!isInputValid} loading={isLoading} color='purple' onClick={onSubmit}>Submit</Button>
+          <Button primary disabled={!isInputValid} loading={isLoading} onClick={onSubmit}>Submit</Button>
         </Modal.Actions>
       </Modal>
     </>
