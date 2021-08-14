@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Container, Placeholder } from 'semantic-ui-react';
 import './EventList.css';
 import { EventListItemProps } from "./types";
 
@@ -59,16 +59,40 @@ export const EventList = () => {
     }
   }
 
+  let content;
+  if (events.length === 0) {
+    content =
+      <Container text>
+        <PlaceholderItems />
+        <PlaceholderItems />
+      </Container>
+  } else {
+    content = events.map((event: EventListItemProps) => (
+      <EventListItem key={event.id} id={event.id} name={event.name}
+        description={event.description} startDate={event.startDate} endDate={event.endDate}></EventListItem>
+    ));
+  }
+
   return (
     <div className="events-container">
-      {
-        events.map((event: EventListItemProps) => {
-          return <EventListItem key={event.id} id={event.id} name={event.name}
-            description={event.description} startDate={event.startDate} endDate={event.endDate}></EventListItem>
-        })
-      }
+      {content}
     </div>
   );
+}
+
+const PlaceholderItems = () => {
+  return (
+    <Placeholder fluid>
+        <Placeholder.Header>
+          <Placeholder.Line />
+        </Placeholder.Header>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+      </Placeholder>
+  )
 }
 
 const EventListItem = ({ name, description, startDate, endDate }: EventListItemProps) => {
