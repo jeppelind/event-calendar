@@ -1,0 +1,69 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: event-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'www.evenemangskalendern.com' ) {
+        rewrite ^ https://evenemangskalendern.com permanent;
+      }
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - evenemangskalendern.com
+    - admin.evenemangskalendern.com
+    - www.evenemangskalendern.com
+    secretName: AddTLSSecretName
+  rules:
+  - host: evenemangskalendern.com
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: client
+            port:
+              number: 443
+  - host: admin.evenemangskalendern.com
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: admin
+            port:
+              number: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: event-ingress-static
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - evenemangskalendern.com
+    secretName: AddTLSSecretName
+  rules:
+  - host: evenemangskalendern.com
+    http:
+      paths:
+      - path:
+        pathType: Prefix
+        backend:
+          service:
+            name: client
+            port:
+              number: 443
+        path: /static(/|$)(.*)
