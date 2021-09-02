@@ -31,3 +31,10 @@
     text-align: left;
   }
 }
+
+.ui.placeholder,
+.ui.placeholder .line,
+.ui.placeholder .line:after,
+.ui.placeholder .paragraph:before {
+  background-color: #f1f1f1;
+}

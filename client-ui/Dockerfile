@@ -5,9 +5,10 @@ WORKDIR /usr/src/app/
 COPY ./frontend/package*.json ./
 COPY ./frontend/tsconfig*.json ./
 COPY ./frontend/public ./public
+COPY ./frontend/craco.config.js ./
 COPY ./frontend/src ./src
 
-RUN npm install --only=prod
+RUN npm install
 RUN npm run build
 
 # Backend

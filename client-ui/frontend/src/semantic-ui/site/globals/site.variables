@@ -1,0 +1,15 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@emSize: 14px;
+@fontSize: 14px;
+
+@fontName: 'Poppins';
+@fontSmoothing: antialiased;
+@pageFont: @fontName, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Helvetica Neue', sans-serif;
+
+@primaryColor: #002f4e;
+@textColor: #2c2c2c;
+@pageBackground: #f1f1f1;
