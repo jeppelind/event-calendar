@@ -73,7 +73,7 @@ const EventListItem = ({ eventId }) => {
       <Grid centered container columns={3}>
         <Grid.Row>
           <Grid.Column stretched mobile={16} tablet={3} computer={3} largeScreen={2}>
-            <span className="date">{formatedDate}</span>
+            <span className="date">{formatedDate} <YearDisplay endDate={event.endDate} /></span>
           </Grid.Column>
           <Grid.Column stretched mobile={10} tablet={10} computer={9} largeScreen={8}>
             <span className="title">{event.name}</span>
@@ -89,6 +89,14 @@ const EventListItem = ({ eventId }) => {
   );
 }
 
+const YearDisplay = ({endDate}) => {
+  const endYear = new Date(endDate).getFullYear();
+  if (endYear !== new Date().getFullYear()) {
+    return <span className="year">{endYear}</span>;
+  }
+  return null;
+}
+
 function formatDate(startDate, endDate) {
   const startDateObj = new Date(startDate);
   if (endDate !== startDate) {
@@ -98,7 +106,6 @@ function formatDate(startDate, endDate) {
     } else {
       return `${startDateObj.getDate()} - ${endDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
     }
-  } else {
-    return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
   }
+  return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
 }

@@ -10,6 +10,9 @@
 .event-item:hover .date {
   color: rgb(0, 144, 211)
 }
+.event-item .year {
+  opacity: 0.8;
+}
 
 .event-item .title {
   font-weight: 400;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Container, Placeholder } from 'semantic-ui-react';
 import './EventList.css';
-import { EventListItemProps } from "./types";
 
 enum DATES {
   jan,
@@ -16,6 +15,14 @@ enum DATES {
   okt,
   nov,
   dec
+}
+
+type EventListItemProps = {
+  id: string,
+  name: string,
+  description?: string,
+  startDate: string,
+  endDate: string,
 }
 
 export const EventList = () => {
@@ -69,7 +76,7 @@ export const EventList = () => {
   } else {
     content = events.map((event: EventListItemProps) => (
       <EventListItem key={event.id} id={event.id} name={event.name}
-        description={event.description} startDate={event.startDate} endDate={event.endDate}></EventListItem>
+        description={event.description} startDate={event.startDate} endDate={event.endDate} />
     ));
   }
 
@@ -102,7 +109,7 @@ const EventListItem = ({ name, description, startDate, endDate }: EventListItemP
       <Grid centered container columns={2}>
         <Grid.Row stretched>
           <Grid.Column mobile={16} tablet={4} computer={3} largeScreen={2}>
-            <span className="date">{formatedDate}</span>
+            <span className="date">{formatedDate} <YearDisplay endDate={endDate} /></span>
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={9} largeScreen={8}>
             <span className="title">{name}</span>
@@ -114,6 +121,14 @@ const EventListItem = ({ name, description, startDate, endDate }: EventListItemP
   );
 }
 
+const YearDisplay = ({ endDate }: { endDate: string }) => {
+  const endYear = new Date(endDate).getFullYear();
+  if (endYear !== new Date().getFullYear()) {
+    return <span className="year">{endYear}</span>;
+  }
+  return null;
+}
+
 function formatDate(startDate: string, endDate: string) {
   const startDateObj = new Date(startDate);
   if (endDate !== startDate) {
@@ -123,7 +138,6 @@ function formatDate(startDate: string, endDate: string) {
     } else {
       return `${startDateObj.getDate()} - ${endDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
     }
-  } else {
-    return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
   }
+  return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
 }

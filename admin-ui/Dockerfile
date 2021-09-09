@@ -4,9 +4,10 @@ WORKDIR /usr/src/app/
 
 COPY ./frontend/package*.json ./
 COPY ./frontend/public ./public
+COPY ./frontend/craco.config.js ./
 COPY ./frontend/src ./src
 
-RUN npm install --only=prod
+RUN npm install
 RUN npm run build
 
 # Backend
@@ -26,9 +27,8 @@ WORKDIR /usr/src/app/
 
 COPY --from=frontend /usr/src/app/build ./build
 COPY --from=backend /usr/src/app/dist ./dist
+COPY --from=backend /usr/src/app/node_modules ./node_modules
 COPY ./backend/package*.json ./
-
-RUN npm install
 
 ENV PORT=8080
 ENV STATIC_ASSETS_PATH=../build

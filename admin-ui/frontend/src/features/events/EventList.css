@@ -6,6 +6,9 @@
 .event-item:hover .date {
   color: rgb(243, 232, 186);
 }
+.event-item .year {
+  opacity: 0.8;
+}
 
 .event-item .title {
   font-weight: 400;
