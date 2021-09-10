@@ -1,3 +1,5 @@
+@import './semantic-ui/site/globals/site.variables';
+
 .events-container {
   padding-top: 2rem;
 }
@@ -8,7 +10,7 @@
   text-align: right;
 }
 .event-item:hover .date {
-  color: rgb(0, 144, 211)
+  color: lighten(@primaryColor, 20%);
 }
 .event-item .year {
   opacity: 0.8;
@@ -39,5 +41,5 @@
 .ui.placeholder .line,
 .ui.placeholder .line:after,
 .ui.placeholder .paragraph:before {
-  background-color: #f1f1f1;
+  background-color: @pageBackground
 }

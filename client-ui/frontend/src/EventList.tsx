@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Container, Placeholder } from 'semantic-ui-react';
-import './EventList.css';
+import './EventList.less';
 
 enum DATES {
   jan,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
-import './Header.css';
+import './Header.less';
 
 export const Header = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
