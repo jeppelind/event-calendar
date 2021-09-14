@@ -129,15 +129,35 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
   return null;
 }
 
+function getDayLabel(date: Date) {
+  const todayLabel = 'Idag';
+  const tomorrowLabel = 'Imorgon';
+  const dateToday = new Date();
+  const dateTomorrow = new Date(Date.now() + 1000 * 60 * 60 * 24);
+  if (date.toDateString() === dateToday.toDateString()) {
+    return todayLabel;
+  }
+  if (date.toDateString() === dateTomorrow.toDateString()) {
+    return tomorrowLabel;
+  }
+  return null;
+}
+
 function formatDate(startDate: string, endDate: string) {
   const startDateObj = new Date(startDate);
+  const startDayLabel = getDayLabel(startDateObj);
+
   if (endDate !== startDate) {
     const endDateObj = new Date(endDate);
-    if (startDateObj.getMonth() !== endDateObj.getMonth()) {
-      return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]} - ${endDateObj.getDate()} ${DATES[endDateObj.getMonth()]}`;
+    const endDayLabel = getDayLabel(endDateObj);
+    const ends = (endDayLabel) ? endDayLabel : `${endDateObj.getDate()} ${DATES[endDateObj.getMonth()]}`;
+    let starts;
+    if (startDateObj.getMonth() !== endDateObj.getMonth() || endDayLabel) {
+      starts = (startDayLabel) ? startDayLabel : `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
     } else {
-      return `${startDateObj.getDate()} - ${endDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
+      starts = (startDayLabel) ? startDayLabel : `${startDateObj.getDate()}`;
     }
+    return `${starts} - ${ends}`;
   }
-  return `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
+  return (startDayLabel) ? startDayLabel : `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
 }
