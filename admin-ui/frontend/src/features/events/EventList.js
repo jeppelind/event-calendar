@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Container, Grid, Placeholder } from 'semantic-ui-react';
-import './EventList.css';
+import './EventList.less';
 import DeleteEventButton from './DeleteEventButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEvents, selectEventById, selectEventIds, selectEventsStatus } from './eventsSlice';

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Header.css';
+import './Header.less';
 import { Container, Dropdown, Icon, Menu, Statistic } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, signOutUser } from './features/user/userSlice';

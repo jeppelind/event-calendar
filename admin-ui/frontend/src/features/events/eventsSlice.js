@@ -12,13 +12,17 @@ const fetchGraphQL = async (query) => {
   const response = await fetch('/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({ query }),
   });
   if (!response.ok) {
     throw Error(response.statusText);
   }
   const result = await response.json();
   return result;
+}
+
+const escapeString = (string) => {
+  return string.replace(/"/g, '\\"');
 }
 
 export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
@@ -51,7 +55,7 @@ export const addEvent = createAsyncThunk('events/addEvent', async (inputData) =>
   const endDateData = endDate !== '' ? endDate : startDate;
   const query = `
     mutation {
-      createEvent(input: {name: "${title}", description: "${description}", startDate: "${startDate}", endDate: "${endDateData}"}) {
+      createEvent(input: {name: "${escapeString(title)}", description: "${escapeString(description)}", startDate: "${startDate}", endDate: "${endDateData}"}) {
         id
         name
         description
@@ -67,7 +71,7 @@ export const updateEvent = createAsyncThunk('events/updateEvent', async (inputDa
   const { eventId, title, description, startDate, endDate } = inputData;
   const query = `
     mutation {
-      updateEvent(id: "${eventId}", input: {name: "${title}", description: "${description}", startDate: "${startDate}", endDate: "${endDate}"}) {
+      updateEvent(id: "${eventId}", input: {name: "${escapeString(title)}", description: "${escapeString(description)}", startDate: "${startDate}", endDate: "${endDate}"}) {
         id
         name
         description
