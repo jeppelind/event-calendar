@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, Placeholder } from 'semantic-ui-react';
+import { Grid, Container, Placeholder, Button } from 'semantic-ui-react';
 import './EventList.less';
 
 enum DATES {
@@ -26,44 +26,22 @@ type EventListItemProps = {
 }
 
 export const EventList = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventListItemProps[]>([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [fetchedAllEvents, setFetchedAllEvents] = useState(false);
+  const eventsPerFetch = 50;
 
   useEffect(() => {
     const asyncFetch = async () => {
-      const result = await fetchEvents();
-      setEvents(result);
+      const newEvents = await fetchEvents(currentIdx, currentIdx + eventsPerFetch);
+      setEvents(prevEvents => [...prevEvents, ...newEvents]);
+      setFetchedAllEvents(newEvents.length < eventsPerFetch);
     }
     asyncFetch();
-  }, []);
+  }, [currentIdx]);
 
-  const fetchEvents = async () => {
-    const query = `
-      {
-        getUpcomingEvents {
-          id
-          name
-          description
-          startDate
-          endDate
-        }
-      }`;
-    try {
-      const response = await fetch('/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query })
-      });
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const result = await response.json();
-      return result.data.getUpcomingEvents;
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
+  const btnClick = async () => {
+    setCurrentIdx(currentIdx + eventsPerFetch);
   }
 
   let content;
@@ -83,6 +61,9 @@ export const EventList = () => {
   return (
     <div className="events-container">
       {content}
+      {!fetchedAllEvents &&
+        <Button onClick={btnClick}>Load more</Button>
+      }
     </div>
   );
 }
@@ -127,6 +108,36 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
     return <span className="year">{endYear}</span>;
   }
   return null;
+}
+
+const fetchEvents = async (startIndex: number, endIndex: number) => {
+  const query = `
+    {
+      getUpcomingEvents(startIndex: ${startIndex}, endIndex: ${endIndex}) {
+        id
+        name
+        description
+        startDate
+        endDate
+      }
+    }`;
+  try {
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query })
+    });
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    const result = await response.json();
+    return result.data.getUpcomingEvents;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
 
 function getDayLabel(date: Date) {
