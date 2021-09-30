@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, Placeholder, Button } from 'semantic-ui-react';
+import { Grid, Container, Placeholder } from 'semantic-ui-react';
 import './EventList.less';
 
 enum DATES {
@@ -31,6 +31,23 @@ export const EventList = () => {
   const [fetchedAllEvents, setFetchedAllEvents] = useState(false);
   const eventsPerFetch = 50;
 
+  const onScroll = throttle(() => {
+    if (fetchedAllEvents || events.length <= currentIdx) return;
+
+    // Fetch new events once close to bottom
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop > 0 && scrollTop >= scrollHeight - clientHeight * 2) {
+      setCurrentIdx(prevValue => prevValue + eventsPerFetch);
+    }
+  }, 100);
+
+  useEffect(() => {
+    document.addEventListener('scroll', onScroll);
+    return () => {
+      document.removeEventListener('scroll', onScroll);
+    }
+  }, [onScroll]);
+
   useEffect(() => {
     const asyncFetch = async () => {
       const newEvents = await fetchEvents(currentIdx, currentIdx + eventsPerFetch);
@@ -40,29 +57,18 @@ export const EventList = () => {
     asyncFetch();
   }, [currentIdx]);
 
-  const btnClick = async () => {
-    setCurrentIdx(currentIdx + eventsPerFetch);
-  }
-
-  let content;
-  if (events.length === 0) {
-    content =
-      <Container text>
-        <PlaceholderItems />
-        <PlaceholderItems />
-      </Container>
-  } else {
-    content = events.map((event: EventListItemProps) => (
-      <EventListItem key={event.id} id={event.id} name={event.name}
-        description={event.description} startDate={event.startDate} endDate={event.endDate} />
-    ));
-  }
-
   return (
     <div className="events-container">
-      {content}
-      {!fetchedAllEvents &&
-        <Button onClick={btnClick}>Load more</Button>
+      {
+        events.map((event: EventListItemProps) => (
+          <EventListItem key={event.id} id={event.id} name={event.name}
+            description={event.description} startDate={event.startDate} endDate={event.endDate} />
+        ))
+      }
+      {!fetchedAllEvents && events.length <= currentIdx &&
+        <Container text>
+          <PlaceholderItems />
+        </Container>
       }
     </div>
   );
@@ -108,6 +114,17 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
     return <span className="year">{endYear}</span>;
   }
   return null;
+}
+
+function throttle(func: Function, timeFrame: number) {
+  let lastTime = 0;
+  return () => {
+      let now = Date.now();
+      if (now - lastTime >= timeFrame) {
+          func();
+          lastTime = now;
+      }
+  };
 }
 
 const fetchEvents = async (startIndex: number, endIndex: number) => {
