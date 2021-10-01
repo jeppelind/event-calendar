@@ -72,22 +72,22 @@ export const EventList = () => {
       }
     </div>
   );
-}
+};
 
 const PlaceholderItems = () => {
   return (
     <Placeholder fluid>
-        <Placeholder.Header>
-          <Placeholder.Line />
-        </Placeholder.Header>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder>
+      <Placeholder.Header>
+        <Placeholder.Line />
+      </Placeholder.Header>
+      <Placeholder.Paragraph>
+        <Placeholder.Line length='long' />
+        <Placeholder.Line />
+        <Placeholder.Line length='very short' />
+      </Placeholder.Paragraph>
+    </Placeholder>
   )
-}
+};
 
 const EventListItem = ({ name, description, startDate, endDate }: EventListItemProps) => {
   const formatedDate = formatDate(startDate, endDate);
@@ -106,7 +106,7 @@ const EventListItem = ({ name, description, startDate, endDate }: EventListItemP
       </Grid>
     </div>
   );
-}
+};
 
 const YearDisplay = ({ endDate }: { endDate: string }) => {
   const endYear = new Date(endDate).getFullYear();
@@ -119,11 +119,11 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
 function throttle(func: Function, timeFrame: number) {
   let lastTime = 0;
   return () => {
-      let now = Date.now();
-      if (now - lastTime >= timeFrame) {
-          func();
-          lastTime = now;
-      }
+    const now = Date.now();
+    if (now - lastTime >= timeFrame) {
+      func();
+      lastTime = now;
+    }
   };
 }
 
