@@ -26,81 +26,68 @@ type EventListItemProps = {
 }
 
 export const EventList = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventListItemProps[]>([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [fetchedAllEvents, setFetchedAllEvents] = useState(false);
+  const eventsPerFetch = 50;
+
+  const onScroll = throttle(() => {
+    if (fetchedAllEvents || events.length <= currentIdx) return;
+
+    // Fetch new events once close to bottom
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop > 0 && scrollTop >= scrollHeight - clientHeight * 2) {
+      setCurrentIdx(prevValue => prevValue + eventsPerFetch);
+    }
+  }, 100);
+
+  useEffect(() => {
+    document.addEventListener('scroll', onScroll);
+    return () => {
+      document.removeEventListener('scroll', onScroll);
+    }
+  }, [onScroll]);
 
   useEffect(() => {
     const asyncFetch = async () => {
-      const result = await fetchEvents();
-      setEvents(result);
+      const newEvents = await fetchEvents(currentIdx, currentIdx + eventsPerFetch);
+      setEvents(prevEvents => [...prevEvents, ...newEvents]);
+      setFetchedAllEvents(newEvents.length < eventsPerFetch);
     }
     asyncFetch();
-  }, []);
-
-  const fetchEvents = async () => {
-    const query = `
-      {
-        getUpcomingEvents {
-          id
-          name
-          description
-          startDate
-          endDate
-        }
-      }`;
-    try {
-      const response = await fetch('/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query })
-      });
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const result = await response.json();
-      return result.data.getUpcomingEvents;
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  }
-
-  let content;
-  if (events.length === 0) {
-    content =
-      <Container text>
-        <PlaceholderItems />
-        <PlaceholderItems />
-      </Container>
-  } else {
-    content = events.map((event: EventListItemProps) => (
-      <EventListItem key={event.id} id={event.id} name={event.name}
-        description={event.description} startDate={event.startDate} endDate={event.endDate} />
-    ));
-  }
+  }, [currentIdx]);
 
   return (
     <div className="events-container">
-      {content}
+      {
+        events.map((event: EventListItemProps) => (
+          <EventListItem key={event.id} id={event.id} name={event.name}
+            description={event.description} startDate={event.startDate} endDate={event.endDate} />
+        ))
+      }
+      {!fetchedAllEvents && events.length <= currentIdx &&
+        <Container text>
+          <PlaceholderItems />
+        </Container>
+      }
     </div>
   );
-}
+};
 
 const PlaceholderItems = () => {
   return (
     <Placeholder fluid>
-        <Placeholder.Header>
-          <Placeholder.Line />
-        </Placeholder.Header>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder>
+      <Placeholder.Header>
+        <Placeholder.Line />
+      </Placeholder.Header>
+      <Placeholder.Paragraph>
+        <Placeholder.Line length='long' />
+        <Placeholder.Line />
+        <Placeholder.Line length='very short' />
+      </Placeholder.Paragraph>
+    </Placeholder>
   )
-}
+};
 
 const EventListItem = ({ name, description, startDate, endDate }: EventListItemProps) => {
   const formatedDate = formatDate(startDate, endDate);
@@ -119,7 +106,7 @@ const EventListItem = ({ name, description, startDate, endDate }: EventListItemP
       </Grid>
     </div>
   );
-}
+};
 
 const YearDisplay = ({ endDate }: { endDate: string }) => {
   const endYear = new Date(endDate).getFullYear();
@@ -127,6 +114,47 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
     return <span className="year">{endYear}</span>;
   }
   return null;
+}
+
+function throttle(func: Function, timeFrame: number) {
+  let lastTime = 0;
+  return () => {
+    const now = Date.now();
+    if (now - lastTime >= timeFrame) {
+      func();
+      lastTime = now;
+    }
+  };
+}
+
+const fetchEvents = async (startIndex: number, endIndex: number) => {
+  const query = `
+    {
+      getUpcomingEvents(startIndex: ${startIndex}, endIndex: ${endIndex}) {
+        id
+        name
+        description
+        startDate
+        endDate
+      }
+    }`;
+  try {
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query })
+    });
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    const result = await response.json();
+    return result.data.getUpcomingEvents;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
 
 function getDayLabel(date: Date) {
