@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"],
+}
