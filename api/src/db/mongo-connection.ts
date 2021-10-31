@@ -1,4 +1,18 @@
-import { model, connect, Schema } from "mongoose";
+import { model, connect, Schema, Document } from "mongoose";
+
+export interface EventDocument extends Document {
+  name: string,
+  description?: string,
+  startDate: Date,
+  endDate?: Date,
+  errors: any,
+}
+
+export interface UserDocument extends Document {
+  name: string,
+  token: string,
+  role: number,
+}
 
 export const createMongoConnection = async () => {
   await connect(process.env.MONGODB_URI, {
@@ -15,7 +29,7 @@ const eventSchema = new Schema({
   endDate: Date,
 });
 
-export const EventDBModel = model('Event', eventSchema);
+export const EventDBModel = model<EventDocument>('Event', eventSchema);
 
 const createEvent = async (name: string, startDate: string, endDate?: string, description?: string) => {
   const document = await EventDBModel.create({
@@ -45,8 +59,7 @@ const updateEvent = async (id: string, name: string, startDate: string, endDate?
 }
 
 const getUpcomingEvents = async () => {
-  const currentDate = new Date();
-  const res = await EventDBModel.find().where('endDate').gte(new Date(currentDate.toDateString())).sort({ startDate: 'ascending' });
+  const res = await EventDBModel.find().where('endDate').gte(Date.now()).sort({ startDate: 'ascending' });
   const objectArr = res.map(doc => doc.toObject());
   return objectArr;
 }
@@ -57,7 +70,7 @@ const userSchema = new Schema({
   role: Number,
 });
 
-export const UserDBModel = model('User', userSchema);
+export const UserDBModel = model<UserDocument>('User', userSchema);
 
 const getUserByToken = async (token: string) => {
   const document = await UserDBModel.findOne({ token }).select({ token: 0, password: 0 });

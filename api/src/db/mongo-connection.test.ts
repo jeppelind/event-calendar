@@ -1,7 +1,7 @@
 import { expect, use } from "chai";
 import chaiExclude from 'chai-exclude';
 import { connect, connection, disconnect } from "mongoose";
-import db, { EventDBModel, UserDBModel } from "./mongo-connection"
+import db, { EventDBModel, EventDocument, UserDBModel } from "./mongo-connection"
 
 use(chaiExclude);
 
@@ -27,7 +27,7 @@ describe('mongo-connection.ts', () => {
         startDate: new Date('2020-11-24'),
         endDate: new Date('2020-11-26')
       }
-      const result = await db.createEvent('test', '2020-11-24', '2020-11-26', 'test event');
+      const result = await db.createEvent('test', '2020-11-24', '2020-11-26', 'test event') as EventDocument;
       expect(result.errors).to.be.undefined;
       expect(result).excluding(['__v', '_id']).to.deep.equal(expected);
     });
@@ -67,7 +67,7 @@ describe('mongo-connection.ts', () => {
         startDate: '2020-10-24',
         endDate: '2020-10-26'
       }
-      const result = await db.updateEvent(doc.id, updateData.name, updateData.startDate, updateData.endDate, updateData.description);
+      const result = await db.updateEvent(doc.id, updateData.name, updateData.startDate, updateData.endDate, updateData.description) as EventDocument;
       expect(result.errors).to.be.undefined;
       expect(result).excluding(['__v', '_id', 'startDate', 'endDate']).to.deep.equal(updateData);
     });

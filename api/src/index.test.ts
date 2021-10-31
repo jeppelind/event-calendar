@@ -39,7 +39,7 @@ describe('API', () => {
     });
 
     it('returns unauthorized error when user lacks permissions', async () => {
-      const stub = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 0 });
+      const stub = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 0 });
 
       const query = `
       mutation {
@@ -56,9 +56,8 @@ describe('API', () => {
     });
 
     it('getUpcomingEvents', async () => {
-      const fakeData = [{ name: 'Testname' }];
-      const stub = sinon.stub(db, 'getUpcomingEvents').resolves(fakeData);
-      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub = sinon.stub(db, 'getUpcomingEvents').resolves([{ name: 'Testname', startDate: new Date() }]);
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
       const stub3 = sinon.stub(cache, 'getEventCache').resolves(null);
       const stub4 = sinon.stub(cache, 'setEventCache').resolves('OK');
 
@@ -77,7 +76,7 @@ describe('API', () => {
       stub3.restore();
       stub4.restore();
 
-      const expected = { data: { getUpcomingEvents: fakeData } }
+      const expected = { data: { getUpcomingEvents: [{ name: 'Testname' }] } }
       expect(result).to.have.status(200);
       expect(result.body).to.deep.equal(expected);
     });
@@ -85,15 +84,15 @@ describe('API', () => {
     it('createEvent', async () => {
       const fakeData = {
             name: 'Testname',
-            startDate: '2020-12-24'
+            startDate: new Date('2020-12-24'),
       };
       const stub = sinon.stub(db, 'createEvent').resolves(fakeData);
-      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
       const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
       mutation {
-        createEvent(input: { name: "${fakeData.name}", startDate: "${fakeData.startDate}" }) {
+        createEvent(input: { name: "${fakeData.name}", startDate: "2020-12-24" }) {
           name
           startDate
         }
@@ -106,7 +105,7 @@ describe('API', () => {
       stub2.restore();
       stub3.restore();
 
-      const expected = { data: { createEvent: fakeData } }
+      const expected = { data: { createEvent: { name: 'Testname', startDate: '2020-12-24T00:00:00.000Z' } } }
       expect(result).to.have.status(200);
       expect(result.body).to.deep.equal(expected);
     });
@@ -114,7 +113,7 @@ describe('API', () => {
     it('deleteEvent', async () => {
       const id = '5f63c58c2656c38e30714929';
       const stub = sinon.stub(db, 'deleteEvent').resolves(id);
-      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
       const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
@@ -138,10 +137,10 @@ describe('API', () => {
       const fakeData = {
         _id: '12345',
         name: 'Testname',
-        startDate: '2020-12-24'
+        startDate: new Date('2020-12-24'),
       };
       const stub = sinon.stub(db, 'updateEvent').resolves(fakeData);
-      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', role: 1 });
+      const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
       const stub3 = sinon.stub(cache, 'clearEventCache').resolves(1);
 
       const query = `
