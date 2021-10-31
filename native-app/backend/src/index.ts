@@ -11,12 +11,13 @@ app.get('/ping', (req, res) => {
 
 app.post('/graphql', async (req, res) => {
   try {
+    const token = req.headers.authorization || process.env.PUBLIC_TOKEN;
     const apiResponse = await fetch(`${process.env.API_URL}/graphql`, {
       method: 'POST',
       body: JSON.stringify({ query: req.body.query }),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: process.env.PUBLIC_TOKEN,
+        Authorization: token,
       },
     });
     if (!apiResponse.ok) {
