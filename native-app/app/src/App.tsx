@@ -6,6 +6,8 @@ import {
   useFonts,
   // eslint-disable-next-line camelcase
   Poppins_400Regular,
+  // eslint-disable-next-line camelcase
+  Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 import EventList from './features/events/EventList';
 import { MyAppText } from './utils/Components';
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-  const [fontsLoaded] = useFonts({ Poppins_400Regular });
+  const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_700Bold });
 
   if (!fontsLoaded) {
     return (

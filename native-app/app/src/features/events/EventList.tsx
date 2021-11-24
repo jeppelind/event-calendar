@@ -91,20 +91,29 @@ const fetchEvents = async (startIndex: number, endIndex: number) => {
   }
 };
 
-// const YearDisplay = ({ endDate }: { endDate: string }) => {
-//   const endYear = new Date(endDate).getFullYear();
-//   if (endYear !== new Date().getFullYear()) {
-//     return <span className="year">{endYear}</span>;
-//   }
-//   return null;
-// };
+const YearDisplay = ({ endDate }: { endDate: string }) => {
+  const endYear = new Date(endDate).getFullYear();
+  if (endYear !== new Date().getFullYear()) {
+    // eslint-disable-next-line react/jsx-one-expression-per-line
+    return <MyAppText style={styles.year}> {endYear}</MyAppText>;
+  }
+  return null;
+};
 
 const EventItem = ({ event }: { event: EventProps }) => {
-  const { name, startDate, endDate } = event;
+  const {
+    name, description, startDate, endDate,
+  } = event;
   return (
     <View style={styles.event}>
-      <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>
+      <View style={styles.dateParent}>
+        <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>
+        <YearDisplay endDate={endDate} />
+      </View>
       <MyAppText style={styles.label}>{name}</MyAppText>
+      {
+        description !== '' && <MyAppText style={styles.description}>{description}</MyAppText>
+      }
     </View>
   );
 };
@@ -130,16 +139,17 @@ const EventList = () => {
     fetchData();
   }, [currentIdx]);
 
+  const footer = () => <View><MyAppText>APANSSON</MyAppText></View>;
+
   return (
-    <View>
-      <FlatList
-        style={styles.eventList}
-        data={events}
-        renderItem={renderItem}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.5}
-      />
-    </View>
+    <FlatList
+      style={styles.eventList}
+      data={events}
+      renderItem={renderItem}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={footer}
+    />
   );
 };
 
