@@ -3,63 +3,8 @@ import {
   FlatList, View, ListRenderItem,
 } from 'react-native';
 import { MyAppText } from '../../utils/Components';
+import EventItem, { EventProps } from './EventItem';
 import styles from './EventList.style';
-
-type EventProps = {
-  id: number,
-  name: string,
-  description: string,
-  startDate: string,
-  endDate: string,
-}
-
-enum DATES {
-  jan,
-  feb,
-  mar,
-  apr,
-  maj,
-  jun,
-  jul,
-  aug,
-  sep,
-  okt,
-  nov,
-  dec
-}
-
-function getDayLabel(date: Date) {
-  const todayLabel = 'Idag';
-  const tomorrowLabel = 'Imorgon';
-  const dateToday = new Date();
-  const dateTomorrow = new Date(Date.now() + 1000 * 60 * 60 * 24);
-  if (date.toDateString() === dateToday.toDateString()) {
-    return todayLabel;
-  }
-  if (date.toDateString() === dateTomorrow.toDateString()) {
-    return tomorrowLabel;
-  }
-  return null;
-}
-
-function formatDate(startDate: string, endDate: string) {
-  const startDateObj = new Date(startDate);
-  const startDayLabel = getDayLabel(startDateObj);
-
-  if (endDate !== startDate) {
-    const endDateObj = new Date(endDate);
-    const endDayLabel = getDayLabel(endDateObj);
-    const ends = endDayLabel || `${endDateObj.getDate()} ${DATES[endDateObj.getMonth()]}`;
-    let starts;
-    if (startDateObj.getMonth() !== endDateObj.getMonth() || endDayLabel) {
-      starts = startDayLabel || `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
-    } else {
-      starts = startDayLabel || `${startDateObj.getDate()}`;
-    }
-    return `${starts} - ${ends}`;
-  }
-  return startDayLabel || `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
-}
 
 const fetchEvents = async (startIndex: number, endIndex: number): Promise<[]> => {
   const query = `
@@ -91,33 +36,6 @@ const fetchEvents = async (startIndex: number, endIndex: number): Promise<[]> =>
   }
 };
 
-const YearDisplay = ({ endDate }: { endDate: string }) => {
-  const endYear = new Date(endDate).getFullYear();
-  if (endYear !== new Date().getFullYear()) {
-    // eslint-disable-next-line react/jsx-one-expression-per-line
-    return <MyAppText style={styles.year}> {endYear}</MyAppText>;
-  }
-  return null;
-};
-
-const EventItem = ({ event }: { event: EventProps }) => {
-  const {
-    name, description, startDate, endDate,
-  } = event;
-  return (
-    <View style={styles.event}>
-      <View style={styles.dateParent}>
-        <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>
-        <YearDisplay endDate={endDate} />
-      </View>
-      <MyAppText style={styles.label}>{name}</MyAppText>
-      {
-        description !== '' && <MyAppText style={styles.description}>{description}</MyAppText>
-      }
-    </View>
-  );
-};
-
 const EventList = () => {
   const [events, setEvents] = useState<EventProps[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -128,6 +46,16 @@ const EventList = () => {
   const renderItem: ListRenderItem<EventProps> = ({ item }) => (
     <EventItem event={item} />
   );
+
+  const footer = () => {
+    if (isAllDataFetched) {
+      return <View style={styles.footer}><MyAppText>No more events</MyAppText></View>;
+    }
+    if (isLoadingEvents) {
+      return <View style={styles.footer}><MyAppText>Loading...</MyAppText></View>;
+    }
+    return <View style={styles.footer} />;
+  };
 
   const onEndReached = () => {
     if (!isAllDataFetched && !isLoadingEvents) {
@@ -147,16 +75,6 @@ const EventList = () => {
     };
     fetchData();
   }, [currentIdx]);
-
-  const footer = () => {
-    if (isLoadingEvents) {
-      return <View style={styles.footer}><MyAppText>Loading...</MyAppText></View>;
-    }
-    if (isAllDataFetched) {
-      return <View style={styles.footer}><MyAppText>No more events</MyAppText></View>;
-    }
-    return <View style={styles.footer} />;
-  };
 
   return (
     <FlatList
