@@ -25,4 +25,9 @@ export default StyleSheet.create({
   description: {
     opacity: 0.5,
   },
+  footer: {
+    minHeight: 75,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

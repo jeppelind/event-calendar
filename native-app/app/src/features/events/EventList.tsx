@@ -61,7 +61,7 @@ function formatDate(startDate: string, endDate: string) {
   return startDayLabel || `${startDateObj.getDate()} ${DATES[startDateObj.getMonth()]}`;
 }
 
-const fetchEvents = async (startIndex: number, endIndex: number) => {
+const fetchEvents = async (startIndex: number, endIndex: number): Promise<[]> => {
   const query = `
     {
       getUpcomingEvents(startIndex: ${startIndex}, endIndex: ${endIndex}) {
@@ -121,6 +121,8 @@ const EventItem = ({ event }: { event: EventProps }) => {
 const EventList = () => {
   const [events, setEvents] = useState<EventProps[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+  const [isAllDataFetched, setIsAllDataFetched] = useState(false);
   const eventsPerFetch = 25;
 
   const renderItem: ListRenderItem<EventProps> = ({ item }) => (
@@ -128,18 +130,33 @@ const EventList = () => {
   );
 
   const onEndReached = () => {
-    setCurrentIdx((prevValue) => prevValue + eventsPerFetch);
+    if (!isAllDataFetched && !isLoadingEvents) {
+      setIsLoadingEvents(true);
+      setCurrentIdx((prevValue) => prevValue + eventsPerFetch);
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const newEvents = await fetchEvents(currentIdx, currentIdx + eventsPerFetch);
       setEvents((prevEvents) => [...prevEvents, ...newEvents]);
+      if (newEvents.length < eventsPerFetch) {
+        setIsAllDataFetched(true);
+      }
+      setIsLoadingEvents(false);
     };
     fetchData();
   }, [currentIdx]);
 
-  const footer = () => <View><MyAppText>APANSSON</MyAppText></View>;
+  const footer = () => {
+    if (isLoadingEvents) {
+      return <View style={styles.footer}><MyAppText>Loading...</MyAppText></View>;
+    }
+    if (isAllDataFetched) {
+      return <View style={styles.footer}><MyAppText>No more events</MyAppText></View>;
+    }
+    return <View style={styles.footer} />;
+  };
 
   return (
     <FlatList
