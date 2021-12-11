@@ -25,7 +25,7 @@ type fetchEventParams = {
   endIndex: number,
 }
 
-export const fetchEvents = createAsyncThunk('events/fetchEvents', async (inputData: fetchEventParams) => {
+export const fetchEvents = createAsyncThunk<[], fetchEventParams>('events/fetchEvents', async (inputData) => {
   const { startIndex, endIndex } = inputData;
   const query = `
     {

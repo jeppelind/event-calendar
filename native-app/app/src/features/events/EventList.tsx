@@ -8,7 +8,12 @@ import { useAppDispatch } from '../../app/store';
 import { MyAppText } from '../../utils/Components';
 import EventItem from './EventItem';
 import styles from './EventList.style';
-import { fetchEvents, selectEventIds, selectEventsLoading, selectEventsTotal } from './eventsSlice';
+import {
+  fetchEvents,
+  selectEventIds,
+  selectEventsLoading,
+  selectEventsTotal,
+} from './eventsSlice';
 
 const EventList = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -34,42 +39,20 @@ const EventList = () => {
   };
 
   const onEndReached = () => {
-    // if (!isAllDataFetched && !isLoadingEvents) {
-    //   setIsLoadingEvents(true);
-    //   setCurrentIdx((prevValue) => prevValue + eventsPerFetch);
-    //   console.log(eventIds.length);
-    // }
-    console.log('end reached');
-    if (!isLoadingEvents) {
-      console.log('need more events');
+    if (!isAllDataFetched && !isLoadingEvents) {
       setCurrentIdx((value) => value + eventsPerFetch);
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const newEvents = await fetchEvents(currentIdx, currentIdx + eventsPerFetch);
-  //     setEvents((prevEvents) => [...prevEvents, ...newEvents]);
-  //     if (newEvents.length < eventsPerFetch) {
-  //       setIsAllDataFetched(true);
-  //     }
-  //     setIsLoadingEvents(false);
-  //   };
-  //   fetchData();
-  // }, [currentIdx]);
-
   useEffect(() => {
-    console.log(`fetch events ${currentIdx}`);
     dispatch(fetchEvents({ startIndex: currentIdx, endIndex: currentIdx + eventsPerFetch }));
   }, [dispatch, currentIdx]);
 
   useEffect(() => {
-    console.log(`total changed to ${total}`);
+    if (total > 0 && Math.abs(total - currentIdx) !== eventsPerFetch) {
+      setIsAllDataFetched(true);
+    }
   }, [total]);
-
-  useEffect(() => {
-    console.log(`is loading: ${isLoadingEvents}`);
-  }, [isLoadingEvents]);
 
   return (
     <FlatList
