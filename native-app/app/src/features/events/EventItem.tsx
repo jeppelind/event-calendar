@@ -1,7 +1,10 @@
+import { EntityId } from '@reduxjs/toolkit';
 import React from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { MyAppText } from '../../utils/Components';
 import styles from './EventList.style';
+import { selectEventById } from './eventsSlice';
 
 export type EventProps = {
   id: number,
@@ -67,7 +70,8 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
   return null;
 };
 
-const EventItem = ({ event }: { event: EventProps }) => {
+const EventItem = ({ eventId } : { eventId: EntityId}) => {
+  const event = useSelector((state) => selectEventById(state, eventId)) as EventProps;
   const {
     name, description, startDate, endDate,
   } = event;
