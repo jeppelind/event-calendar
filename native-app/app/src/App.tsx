@@ -9,8 +9,7 @@ import {
   // eslint-disable-next-line camelcase
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
-import EventList from './features/events/EventList';
-import { MyAppText } from './utils/Components';
+import RootNavigation from './navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,13 +17,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     marginTop: StatusBar.currentHeight || 25,
-    // justifyContent: 'center',
-  },
-  header: {
-    backgroundColor: 'aliceblue',
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 20,
   },
 });
 
@@ -39,14 +31,7 @@ const App = () => {
     );
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <MyAppText>Evenemangskalendern</MyAppText>
-      </View>
-      <EventList />
-    </View>
-  );
+  return <RootNavigation />;
 };
 
 export default App;
