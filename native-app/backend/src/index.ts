@@ -1,12 +1,27 @@
 import express from 'express';
 import fetch from 'node-fetch';
+import cors from 'cors';
+import passport from './auth';
+import { createMongoConnection } from './db-wrapper';
+import { getUserData, User } from './user';
 
 const app = express();
 
+if (process.env.NODE_ENV === 'dev') {
+  app.use(cors({ origin: 'http://localhost:19006' }));
+}
+
 app.use(express.json());
+app.use(passport.initialize());
 
 app.get('/ping', (req, res) => {
   res.send('pong');
+});
+
+app.post('/login', passport.authenticate('local', {
+  session: false,
+}), (req, res) => {
+  res.json(getUserData(req.user as User));
 });
 
 app.post('/graphql', async (req, res) => {
@@ -24,6 +39,7 @@ app.post('/graphql', async (req, res) => {
       throw Error(apiResponse.statusText);
     }
     const json = await apiResponse.json();
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // TEST DELAY
     res.send(json);
   } catch (err) {
     res.status(500).send(err);
@@ -31,6 +47,7 @@ app.post('/graphql', async (req, res) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
+  createMongoConnection();
   app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 }
 
