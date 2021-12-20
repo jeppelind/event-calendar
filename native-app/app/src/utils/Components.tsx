@@ -4,6 +4,7 @@ import {
   Text, TextInputProps, TextProps, StyleSheet, Pressable, PressableProps, StyleProp, ViewStyle,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   input: {
@@ -90,6 +91,19 @@ export const MyAppButton: FC<CustomButton> = (props) => {
       <Text style={styles.buttonLabel}>
         {title}
       </Text>
+    </Pressable>
+  );
+};
+
+type MyAppIconButtonProps = PressableProps & {
+ icon: any,
+};
+
+export const MyAppIconButton: FC<MyAppIconButtonProps> = (props) => {
+  const { icon, onPress } = props;
+  return (
+    <Pressable onPress={onPress}>
+      <MaterialIcons name={icon} size={32} color="white" />
     </Pressable>
   );
 };

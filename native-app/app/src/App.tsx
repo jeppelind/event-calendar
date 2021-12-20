@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StatusBar, StyleSheet, Text, View,
 } from 'react-native';
@@ -10,6 +10,8 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 import RootNavigation from './navigation';
+import { useAppDispatch } from './app/store';
+import { loadUserData } from './features/user/userSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +24,11 @@ const styles = StyleSheet.create({
 
 const App = () => {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_700Bold });
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(loadUserData());
+  }, []);
 
   if (!fontsLoaded) {
     return (
@@ -31,7 +38,12 @@ const App = () => {
     );
   }
 
-  return <RootNavigation />;
+  return (
+    <>
+      <StatusBar barStyle="light-content" />
+      <RootNavigation />
+    </>
+  );
 };
 
 export default App;

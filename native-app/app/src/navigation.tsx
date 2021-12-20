@@ -2,72 +2,94 @@ import React from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable } from 'react-native';
+import { useSelector } from 'react-redux';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
-import { MyAppText } from './utils/Components';
+import { MyAppIconButton } from './utils/Components';
+import { useAppDispatch } from './app/store';
+import { deleteUserData, selectUser } from './features/user/userSlice';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const MenuButton = () => {
+const MainNavigationStack = () => {
   const navigation = useNavigation();
+  const user = useSelector(selectUser);
+
   return (
-    <Pressable onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-      <MyAppText style={{ color: '#ecf0f1' }}>MENU</MyAppText>
-    </Pressable>
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerStyle: { backgroundColor: '#095b91' },
+        headerTitleStyle: {
+          fontFamily: 'Poppins_400Regular',
+        },
+        headerShadowVisible: false,
+        headerTintColor: 'white',
+        contentStyle: {
+          backgroundColor: '#ecf0f1',
+        },
+      }}
+    >
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Evenemangskalendern',
+          headerTitleStyle: {
+            fontFamily: 'Poppins_700Bold',
+            fontSize: 14,
+          },
+          headerTitleAlign: 'center',
+          headerLeft: () => <MyAppIconButton icon="menu" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />,
+          headerRight: () => {
+            if (user.name) {
+              return <MyAppIconButton icon="add-box" onPress={() => console.log('Pressed')} />;
+            }
+            return null;
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+      />
+    </Stack.Navigator>
   );
 };
 
-const MainNavigationStack = () => (
-  <Stack.Navigator
-    initialRouteName="Home"
-    screenOptions={{
-      headerStyle: { backgroundColor: '#095b91' },
-      headerTitleStyle: {
-        fontFamily: 'Poppins_400Regular',
-      },
-      headerShadowVisible: false,
-      headerTintColor: 'white',
-      contentStyle: {
-        backgroundColor: '#ecf0f1',
-      },
-    }}
-  >
-    <Stack.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{
-        title: 'Evenemangskalendern',
-        headerTitleStyle: {
-          fontFamily: 'Poppins_700Bold',
-          fontSize: 14,
-        },
-        headerTitleAlign: 'center',
-        headerLeft: () => <MenuButton />,
-        // headerRight: () => <Button title="BTN" onPress={() => navigation.navigate('Login')} />,
-      }}
-    />
-    <Stack.Screen
-      name="Login"
-      component={Login}
-    />
-  </Stack.Navigator>
-);
-
 const CustomDrawerContent = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const user = useSelector(selectUser);
+
+  const labelStyle = { fontSize: 16, fontFamily: 'Poppins_700Regular' };
 
   return (
     <DrawerContentScrollView>
       <DrawerItem
         label="Start"
+        labelStyle={labelStyle}
         onPress={() => navigation.navigate('Home')}
       />
-      <DrawerItem
-        label="Login"
-        onPress={() => navigation.navigate('Login')}
-      />
+      {
+        user.name ? (
+          <DrawerItem
+            label="Log out"
+            labelStyle={labelStyle}
+            onPress={() => {
+              dispatch(deleteUserData());
+              navigation.dispatch(DrawerActions.closeDrawer());
+            }}
+          />
+        ) : (
+          <DrawerItem
+            label="Log in"
+            labelStyle={labelStyle}
+            onPress={() => navigation.navigate('Login')}
+          />
+        )
+      }
     </DrawerContentScrollView>
   );
 };
