@@ -12,6 +12,7 @@ import {
 import RootNavigation from './navigation';
 import { useAppDispatch } from './app/store';
 import { loadUserData } from './features/user/userSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,8 +41,10 @@ const App = () => {
 
   return (
     <>
-      <StatusBar barStyle="light-content" />
-      <RootNavigation />
+      <StatusBar barStyle="light-content" backgroundColor="#095b91" />
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#095b91' }}>
+        <RootNavigation />
+      </SafeAreaView>
     </>
   );
 };

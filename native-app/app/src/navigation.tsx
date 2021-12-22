@@ -5,9 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
-import { MyAppIconButton } from './utils/Components';
+import { MyAppIconButton, MyAppText } from './utils/Components';
 import { useAppDispatch } from './app/store';
 import { deleteUserData, selectUser } from './features/user/userSlice';
+import { View } from 'react-native';
+import AddEventModal from './features/events/AddEventModal';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,29 +33,38 @@ const MainNavigationStack = () => {
         },
       }}
     >
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Evenemangskalendern',
-          headerTitleStyle: {
-            fontFamily: 'Poppins_700Bold',
-            fontSize: 14,
-          },
-          headerTitleAlign: 'center',
-          headerLeft: () => <MyAppIconButton icon="menu" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />,
-          headerRight: () => {
-            if (user.name) {
-              return <MyAppIconButton icon="add-box" onPress={() => console.log('Pressed')} />;
-            }
-            return null;
-          },
-        }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-      />
+      <Stack.Group>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'Evenemangskalendern',
+            headerTitleStyle: {
+              fontFamily: 'Poppins_700Bold',
+              fontSize: 14,
+            },
+            headerTitleAlign: 'center',
+            headerLeft: () => <MyAppIconButton icon="menu" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />,
+            headerRight: () => {
+              if (user.name) {
+                return <MyAppIconButton icon="add-box" onPress={() => navigation.navigate('AddEventModal')} />;
+              }
+              return null;
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+        />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen
+          name="AddEventModal"
+          component={AddEventModal}
+          options={{ title: 'New event' }}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };
@@ -63,7 +74,7 @@ const CustomDrawerContent = () => {
   const dispatch = useAppDispatch();
   const user = useSelector(selectUser);
 
-  const labelStyle = { fontSize: 16, fontFamily: 'Poppins_700Regular' };
+  const labelStyle = { fontSize: 16, fontFamily: 'Poppins_400Regular' };
 
   return (
     <DrawerContentScrollView>

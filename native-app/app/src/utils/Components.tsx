@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import {
-  Text, TextInputProps, TextProps, StyleSheet, Pressable, PressableProps, StyleProp, ViewStyle,
+  Text, TextInputProps, TextProps, StyleSheet, Pressable, PressableProps, StyleProp, ViewStyle, Modal, View,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const styles = StyleSheet.create({
   input: {
@@ -38,6 +39,27 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     opacity: 0.8,
+  },
+  modalParentView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingBottom: 26,
+  },
+  modalView: {
+    margin: 4,
+    backgroundColor: '#d0d0c0',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '100%',
   },
 });
 
@@ -105,5 +127,71 @@ export const MyAppIconButton: FC<MyAppIconButtonProps> = (props) => {
     <Pressable onPress={onPress}>
       <MaterialIcons name={icon} size={32} color="white" />
     </Pressable>
+  );
+};
+
+type DatePickerProps = {
+  startDate?: Date,
+  onClose: (date?: Date) => void,
+  visible?: boolean,
+}
+
+export const MyDatePickerAndroid: FC<DatePickerProps> = ({ onClose, startDate, visible }) => {
+  const [date, setDate] = useState(startDate || new Date());
+
+  const onChange = (_evt: any, selectedDate: Date | undefined) => {
+    const newDate = selectedDate || date;
+    setDate(newDate);
+    onClose(newDate);
+  };
+
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <DateTimePicker
+      testID="dateTimePicker"
+      mode="date"
+      value={date}
+      is24Hour
+      onChange={onChange}
+      style={{ width: '100%' }}
+    />
+  );
+};
+
+export const MyDatePickerIOS: FC<DatePickerProps> = ({ startDate, onClose, visible }) => {
+  const [date, setDate] = useState(startDate || new Date());
+
+  const onChange = (_evt: any, selectedDate: Date | undefined) => {
+    const newDate = selectedDate || date;
+    setDate(newDate);
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+    >
+      <View style={styles.modalParentView}>
+        <View style={styles.modalView}>
+          <DateTimePicker
+            mode="date"
+            value={date}
+            is24Hour
+            display="spinner"
+            onChange={onChange}
+            style={{ width: '100%', backgroundColor: 'white' }}
+            textColor="black"
+          />
+          <View style={{ width: '100%', padding: 10 }}>
+            <MyAppButton title="Confirm" onPress={() => onClose(date)} />
+            <MyAppButton title="Cancel" onPress={() => onClose()} style={{ marginTop: 10, backgroundColor: '#595959' }} />
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
