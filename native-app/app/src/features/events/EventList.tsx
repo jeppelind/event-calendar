@@ -1,4 +1,4 @@
-import { EntityId } from '@reduxjs/toolkit';
+import { EntityId, unwrapResult } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList, View, ListRenderItem,
@@ -12,7 +12,6 @@ import {
   fetchEvents,
   selectEventIds,
   selectEventsLoading,
-  selectEventsTotal,
 } from './eventsSlice';
 
 const EventList = () => {
@@ -22,7 +21,6 @@ const EventList = () => {
   const dispatch = useAppDispatch();
   const eventIds = useSelector(selectEventIds);
   const isLoadingEvents = useSelector(selectEventsLoading);
-  const total = useSelector(selectEventsTotal);
 
   const renderItem: ListRenderItem<EntityId> = (item) => (
     <EventItem eventId={item.item} />
@@ -45,14 +43,20 @@ const EventList = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchEvents({ startIndex: currentIdx, endIndex: currentIdx + eventsPerFetch }));
+    const fetchMoreEvents = async () => {
+      try {
+        const eventParams = { startIndex: currentIdx, endIndex: currentIdx + eventsPerFetch };
+        const res = await dispatch(fetchEvents(eventParams));
+        unwrapResult(res);
+        if (res.payload.length === 0) {
+          setIsAllDataFetched(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchMoreEvents();
   }, [dispatch, currentIdx]);
-
-  useEffect(() => {
-    if (total > 0 && Math.abs(total - currentIdx) !== eventsPerFetch) {
-      setIsAllDataFetched(true);
-    }
-  }, [total]);
 
   return (
     <FlatList

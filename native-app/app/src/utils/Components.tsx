@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { FC, useState } from 'react';
 import {
-  Text, TextInputProps, TextProps, StyleSheet, Pressable, PressableProps, StyleProp, ViewStyle, Modal, View,
+  Text, TextInputProps, TextProps, StyleSheet, Pressable,
+  PressableProps, StyleProp, ViewStyle, Modal, View,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -32,10 +33,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#095b91',
   },
+  buttonSecondary: {
+    backgroundColor: '#7a7a7a',
+  },
+  buttonLight: {
+    backgroundColor: '#f8f9fa',
+  },
   buttonLabel: {
     fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     color: 'white',
+  },
+  buttonLabelLight: {
+    color: 'black',
   },
   buttonPressed: {
     opacity: 0.8,
@@ -93,16 +103,24 @@ export const MyAppTextInput: FC<TextInputProps> = (props) => {
 type CustomButton = PressableProps & {
   title: string,
   style?: StyleProp<ViewStyle> | undefined,
+  secondary?: boolean,
+  light?: boolean,
 }
 
 export const MyAppButton: FC<CustomButton> = (props) => {
-  const { title, style, onPress } = props;
+  const {
+    title, style, secondary, light, onPress,
+  } = props;
+
+  const secondaryStyle = (secondary) ? styles.buttonSecondary : {};
+  const lightStyle = (light) ? styles.buttonLight : {};
+  const lightButton = (light) ? styles.buttonLabelLight : {};
 
   const getStyle = (isPressed: Boolean) => {
     if (isPressed) {
-      return [styles.button, styles.buttonPressed, style];
+      return [styles.button, styles.buttonPressed, secondaryStyle, lightStyle, style];
     }
-    return [styles.button, style];
+    return [styles.button, secondaryStyle, lightStyle, style];
   };
 
   return (
@@ -110,7 +128,7 @@ export const MyAppButton: FC<CustomButton> = (props) => {
       style={({ pressed }) => getStyle(pressed)}
       onPress={onPress}
     >
-      <Text style={styles.buttonLabel}>
+      <Text style={[styles.buttonLabel, lightButton]}>
         {title}
       </Text>
     </Pressable>
@@ -188,7 +206,7 @@ export const MyDatePickerIOS: FC<DatePickerProps> = ({ startDate, onClose, visib
           />
           <View style={{ width: '100%', padding: 10 }}>
             <MyAppButton title="Confirm" onPress={() => onClose(date)} />
-            <MyAppButton title="Cancel" onPress={() => onClose()} style={{ marginTop: 10, backgroundColor: '#595959' }} />
+            <MyAppButton secondary title="Cancel" onPress={() => onClose()} style={{ marginTop: 10 }} />
           </View>
         </View>
       </View>
