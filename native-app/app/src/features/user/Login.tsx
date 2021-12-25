@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View, StyleSheet, ActivityIndicator, TouchableWithoutFeedback, Keyboard,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/store';
 import {
@@ -44,30 +46,32 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <MyAppHeader>Log in</MyAppHeader>
-      <MyAppTextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <MyAppTextInput
-        value={password}
-        placeholder="Password"
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <MyAppButton
-        title="Log in"
-        disabled={isLoadingUser}
-        onPress={onSubmit}
-        style={{ marginTop: 10 }}
-      />
-      { error && <MyAppText style={styles.errorMsg}>{error}</MyAppText>}
-      { isLoadingUser && <ActivityIndicator size="large" color="#095b91" /> }
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <MyAppHeader>Log in</MyAppHeader>
+        <MyAppTextInput
+          value={email}
+          placeholder="Email"
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <MyAppTextInput
+          value={password}
+          placeholder="Password"
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <MyAppButton
+          title="Log in"
+          disabled={isLoadingUser}
+          onPress={onSubmit}
+          style={{ marginTop: 10 }}
+        />
+        { error && <MyAppText style={styles.errorMsg}>{error}</MyAppText>}
+        { isLoadingUser && <ActivityIndicator size="large" color="#095b91" /> }
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

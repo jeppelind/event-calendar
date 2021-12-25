@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import {
+  View, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/store';
 import {
@@ -53,18 +55,17 @@ const AddEventModal = () => {
   const updateEndDate = (newDate: Date | undefined) => {
     setShowEndDatePicker(false);
     if (newDate) {
-      setEndDate(newDate);
+      setEndDate((newDate < startDate) ? startDate : newDate);
     }
   };
 
   const onSubmit = async () => {
     try {
-      const adjustedEndDate = (endDate < startDate) ? startDate : endDate;
       const res = await dispatch(addEvent({
         title,
         description,
         startDate,
-        endDate: adjustedEndDate,
+        endDate,
         token: user.token,
       }));
       unwrapResult(res);
@@ -75,52 +76,54 @@ const AddEventModal = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <MyAppHeader>Add new event</MyAppHeader>
-      <MyAppTextInput
-        value={title}
-        placeholder="Title"
-        onChangeText={setTitle}
-      />
-      <MyAppTextInput
-        value={description}
-        placeholder="Description"
-        onChangeText={setDescription}
-        multiline
-        numberOfLines={4}
-        style={{ height: 90 }}
-      />
-      <View style={styles.datesParent}>
-        <MyAppButton
-          light
-          style={styles.dateButton}
-          title={startDate.toDateString()}
-          onPress={() => setShowStartDatePicker(true)}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <MyAppHeader>Add new event</MyAppHeader>
+        <MyAppTextInput
+          value={title}
+          placeholder="Title"
+          onChangeText={setTitle}
         />
-        <MyAppButton
-          light
-          style={styles.dateButton}
-          title={endDateLabel}
-          onPress={() => setShowEndDatePicker(true)}
+        <MyAppTextInput
+          value={description}
+          placeholder="Description"
+          onChangeText={setDescription}
+          multiline
+          numberOfLines={2}
+          style={{ height: 70 }}
         />
+        <View style={styles.datesParent}>
+          <MyAppButton
+            light
+            style={styles.dateButton}
+            title={startDate.toDateString()}
+            onPress={() => setShowStartDatePicker(true)}
+          />
+          <MyAppButton
+            light
+            style={styles.dateButton}
+            title={endDateLabel}
+            onPress={() => setShowEndDatePicker(true)}
+          />
+        </View>
+        <View style={{ marginTop: 10, width: '100%' }}>
+          <MyAppButton title="Create event" style={styles.sysButton} onPress={onSubmit} />
+          <MyAppButton secondary title="Cancel" style={styles.sysButton} onPress={() => navigation.goBack()} />
+        </View>
+        {Platform.OS === 'ios'
+          ? (
+            <>
+              <MyDatePickerIOS visible={showStartDatePicker} onClose={updateStartDate} />
+              <MyDatePickerIOS visible={showEndDatePicker} onClose={updateEndDate} />
+            </>
+          ) : (
+            <>
+              <MyDatePickerAndroid visible={showStartDatePicker} onClose={updateStartDate} />
+              <MyDatePickerAndroid visible={showEndDatePicker} onClose={updateEndDate} />
+            </>
+          )}
       </View>
-      <View style={{ marginTop: 10, width: '100%' }}>
-        <MyAppButton title="Create event" style={styles.sysButton} onPress={onSubmit} />
-        <MyAppButton secondary title="Cancel" style={styles.sysButton} onPress={() => navigation.goBack()} />
-      </View>
-      {Platform.OS === 'ios'
-        ? (
-          <>
-            <MyDatePickerIOS visible={showStartDatePicker} onClose={updateStartDate} />
-            <MyDatePickerIOS visible={showEndDatePicker} onClose={updateEndDate} />
-          </>
-        ) : (
-          <>
-            <MyDatePickerAndroid visible={showStartDatePicker} onClose={updateStartDate} />
-            <MyDatePickerAndroid visible={showEndDatePicker} onClose={updateEndDate} />
-          </>
-        )}
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
