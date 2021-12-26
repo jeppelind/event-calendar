@@ -1,8 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import { EntityId } from '@reduxjs/toolkit';
 import React from 'react';
-import { View } from 'react-native';
+import { Animated, useWindowDimensions, View } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import { MyAppText } from '../../utils/Components';
+import { MyAppIconButton, MyAppText } from '../../utils/Components';
+import { selectUserToken } from '../user/userSlice';
 import styles from './EventList.style';
 import { selectEventById } from './eventsSlice';
 
@@ -71,21 +74,69 @@ const YearDisplay = ({ endDate }: { endDate: string }) => {
 };
 
 const EventItem = ({ eventId } : { eventId: EntityId}) => {
+  const navigation = useNavigation();
+  const userToken = useSelector(selectUserToken);
   const event = useSelector((state) => selectEventById(state, eventId)) as EventProps;
   const {
     name, description, startDate, endDate,
   } = event;
+  const { width } = useWindowDimensions();
+
+  const swipeMenu = (_: Animated.AnimatedInterpolation, dragX: Animated.AnimatedInterpolation) => {
+    const trans = dragX.interpolate({
+      inputRange: [0, 100],
+      outputRange: [0, 0],
+    });
+    return (
+      <Animated.View style={{
+        width: '100%',
+        // justifyContent: 'center',
+        backgroundColor: '#095b91',
+        transform: [{ translateX: trans }],
+      }}
+      >
+        <View style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+        >
+          {userToken && (
+            <>
+              <MyAppIconButton
+                style={styles.buttonInteraction}
+                icon="edit"
+                onPress={() => console.log('edit')}
+              />
+              <MyAppIconButton
+                style={styles.buttonInteraction}
+                icon="delete"
+                onPress={() => navigation.navigate('DeleteEventModal', { id: eventId.toString() })}
+              />
+            </>
+          )}
+        </View>
+      </Animated.View>
+    );
+  };
+
   return (
-    <View style={styles.event}>
-      <View style={styles.dateParent}>
-        <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>
-        <YearDisplay endDate={endDate} />
-      </View>
-      <MyAppText style={styles.label}>{name}</MyAppText>
-      {
-        description !== '' && <MyAppText style={styles.description}>{description}</MyAppText>
-      }
-    </View>
+    <Swipeable renderRightActions={swipeMenu} rightThreshold={width * 0.2}>
+      <Animated.View style={styles.eventItem}>
+        <View style={styles.event}>
+          <View style={styles.dateParent}>
+            <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>
+            <YearDisplay endDate={endDate} />
+          </View>
+          <MyAppText style={styles.label}>{name}</MyAppText>
+          {
+            description !== '' && <MyAppText style={styles.description}>{description}</MyAppText>
+          }
+        </View>
+      </Animated.View>
+    </Swipeable>
   );
 };
 

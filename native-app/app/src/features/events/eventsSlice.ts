@@ -50,6 +50,22 @@ export const fetchEvents = createAsyncThunk<[], fetchEventParams>('events/fetchE
   return result.data.getUpcomingEvents;
 });
 
+type deleteEventParams = {
+  id: string,
+  token: string,
+}
+
+export const deleteEvent = createAsyncThunk<string, deleteEventParams>('events/deleteEvent', async (inputData) => {
+  const { id, token } = inputData;
+  const query = `
+    mutation {
+      deleteEvent(id: "${id}")
+    }
+  `;
+  const result = await fetchGraphQL(query, token);
+  return result.data.deleteEvent;
+});
+
 type addEventParams = {
   title: string,
   description: string,
@@ -91,6 +107,7 @@ const eventsSlice = createSlice({
     builder.addCase(fetchEvents.rejected, (state) => {
       state.loading = false;
     });
+    builder.addCase(deleteEvent.fulfilled, eventsAdapter.removeOne);
     builder.addCase(addEvent.fulfilled, eventsAdapter.upsertOne);
   },
 });

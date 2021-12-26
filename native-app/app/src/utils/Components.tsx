@@ -137,12 +137,13 @@ export const MyAppButton: FC<CustomButton> = (props) => {
 
 type MyAppIconButtonProps = PressableProps & {
  icon: any,
+ style?: StyleProp<ViewStyle> | undefined,
 };
 
 export const MyAppIconButton: FC<MyAppIconButtonProps> = (props) => {
-  const { icon, onPress } = props;
+  const { icon, style, onPress } = props;
   return (
-    <Pressable onPress={onPress}>
+    <Pressable style={style} onPress={onPress}>
       <MaterialIcons name={icon} size={32} color="white" />
     </Pressable>
   );

@@ -2,9 +2,16 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   eventList: {
-    width: '100%',
+    // width: '100%',
+    // backgroundColor: '#095b91',
+  },
+  eventItem: {
+    // flex: 1,
+    // flexDirection: 'row',
+    backgroundColor: '#ecf0f1',
   },
   event: {
+    // flex: 1,
     marginVertical: 2,
     padding: 15,
   },
@@ -29,5 +36,9 @@ export default StyleSheet.create({
     minHeight: 75,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonInteraction: {
+    padding: 20,
+    // backgroundColor: 'hotpink',
   },
 });

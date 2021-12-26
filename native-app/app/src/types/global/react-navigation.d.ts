@@ -1,10 +1,10 @@
 export {};
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined,
   Login: undefined,
   AddEventModal: undefined,
-  DeleteEventModal: undefined,
+  DeleteEventModal: { id: string },
   EditEventModal: undefined,
 }
 

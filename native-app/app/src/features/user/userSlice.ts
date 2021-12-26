@@ -36,7 +36,7 @@ type signInUserParams = {
 }
 
 export const signInUser = createAsyncThunk<{}, signInUserParams>('user/signInUser', async (userInput) => {
-  const response = await fetch('http://192.168.10.179:9895/login', {
+  const response = await fetch('http://192.168.0.58:9895/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userInput),
@@ -77,3 +77,4 @@ export default userSlice.reducer;
 
 export const selectUserLoading = (state: RootStateOrAny) => state.user.loading;
 export const selectUser = (state: RootStateOrAny) => state.user.user;
+export const selectUserToken = (state: RootStateOrAny) => state.user.user.token;

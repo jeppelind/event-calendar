@@ -5,11 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
-import { MyAppIconButton, MyAppText } from './utils/Components';
+import { MyAppIconButton } from './utils/Components';
 import { useAppDispatch } from './app/store';
 import { deleteUserData, selectUser } from './features/user/userSlice';
-import { View } from 'react-native';
 import AddEventModal from './features/events/AddEventModal';
+import DeleteEventModal from './features/events/DeleteEventModal';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -59,6 +59,11 @@ const MainNavigationStack = () => {
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen
+          name="DeleteEventModal"
+          component={DeleteEventModal}
+          options={{ title: 'Delete event' }}
+        />
         <Stack.Screen
           name="AddEventModal"
           component={AddEventModal}
