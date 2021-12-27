@@ -108,7 +108,7 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
               <MyAppIconButton
                 style={styles.buttonInteraction}
                 icon="edit"
-                onPress={() => console.log('edit')}
+                onPress={() => navigation.navigate('EditEventModal', { id: eventId.toString() })}
               />
               <MyAppIconButton
                 style={styles.buttonInteraction}

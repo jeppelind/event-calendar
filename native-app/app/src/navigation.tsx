@@ -10,6 +10,7 @@ import { useAppDispatch } from './app/store';
 import { deleteUserData, selectUser } from './features/user/userSlice';
 import AddEventModal from './features/events/AddEventModal';
 import DeleteEventModal from './features/events/DeleteEventModal';
+import EditEventModal from './features/events/EditEventModal';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,6 +69,11 @@ const MainNavigationStack = () => {
           name="AddEventModal"
           component={AddEventModal}
           options={{ title: 'New event' }}
+        />
+        <Stack.Screen
+          name="EditEventModal"
+          component={EditEventModal}
+          options={{ title: 'Edit event' }}
         />
       </Stack.Group>
     </Stack.Navigator>

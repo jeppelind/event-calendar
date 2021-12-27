@@ -5,7 +5,7 @@ export type RootStackParamList = {
   Login: undefined,
   AddEventModal: undefined,
   DeleteEventModal: { id: string },
-  EditEventModal: undefined,
+  EditEventModal: { id: string },
 }
 
 // https://reactnavigation.org/docs/typescript#specifying-default-types-for-usenavigation-link-ref-etc

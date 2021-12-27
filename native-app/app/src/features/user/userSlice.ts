@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { RootStateOrAny } from 'react-redux';
+import { ENDPOINT } from 'react-native-dotenv';
 
 const initialState = {
   loading: false,
@@ -36,7 +37,7 @@ type signInUserParams = {
 }
 
 export const signInUser = createAsyncThunk<{}, signInUserParams>('user/signInUser', async (userInput) => {
-  const response = await fetch('http://192.168.0.58:9895/login', {
+  const response = await fetch(`${ENDPOINT}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userInput),

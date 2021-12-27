@@ -1,5 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
+import { ENDPOINT } from 'react-native-dotenv';
 
 const eventsAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.startDate.localeCompare(b.startDate),
@@ -17,7 +18,7 @@ const fetchGraphQL = async (query: string, token?: string) => {
     headers = { ...headers, ...{ Authorization: `Bearer ${token}` } };
   }
 
-  const response = await fetch('http://192.168.0.58:9895/graphql', {
+  const response = await fetch(`${ENDPOINT}/graphql`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ query }),
@@ -92,6 +93,33 @@ export const addEvent = createAsyncThunk<void, addEventParams>('events/addEvent'
   return result.data.createEvent;
 });
 
+type updateEventParams = {
+  id: string,
+  title: string,
+  description: string,
+  startDate: Date,
+  endDate: Date,
+  token: string
+}
+
+export const updateEvent = createAsyncThunk<void, updateEventParams>('events/editEvent', async (inputData) => {
+  const {
+    id, title, description, startDate, endDate, token,
+  } = inputData;
+  const query = `
+    mutation {
+      updateEvent(id: "${id}", input: {name: "${escapeString(title)}", description: "${escapeString(description)}", startDate: "${startDate}", endDate: "${endDate}"}) {
+        id
+        name
+        description
+        startDate
+        endDate
+      }
+    }`;
+  const result = await fetchGraphQL(query, token);
+  return result.data.updateEvent;
+});
+
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
@@ -109,6 +137,7 @@ const eventsSlice = createSlice({
     });
     builder.addCase(deleteEvent.fulfilled, eventsAdapter.removeOne);
     builder.addCase(addEvent.fulfilled, eventsAdapter.upsertOne);
+    builder.addCase(updateEvent.fulfilled, eventsAdapter.upsertOne);
   },
 });
 
