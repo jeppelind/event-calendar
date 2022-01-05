@@ -3,6 +3,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@rea
 import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
+import { useColorScheme } from 'react-native';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
 import { MyAppIconButton } from './utils/Components';
@@ -11,6 +12,7 @@ import { deleteUserData, selectUser } from './features/user/userSlice';
 import AddEventModal from './features/events/AddEventModal';
 import DeleteEventModal from './features/events/DeleteEventModal';
 import EditEventModal from './features/events/EditEventModal';
+import { darkTheme, lightTheme } from './utils/color';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -18,19 +20,21 @@ const Drawer = createDrawerNavigator();
 const MainNavigationStack = () => {
   const navigation = useNavigation();
   const user = useSelector(selectUser);
+  const colorScheme = useColorScheme();
+  const theme = (colorScheme === 'light') ? lightTheme : darkTheme;
 
   return (
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerStyle: { backgroundColor: '#095b91' },
+        headerStyle: { backgroundColor: theme.primary },
         headerTitleStyle: {
           fontFamily: 'Poppins_400Regular',
         },
         headerShadowVisible: false,
         headerTintColor: 'white',
         contentStyle: {
-          backgroundColor: '#ecf0f1',
+          backgroundColor: theme.background,
         },
       }}
     >

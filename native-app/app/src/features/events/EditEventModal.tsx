@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/store';
 import { RootStackParamList } from '../../types/global/react-navigation';
 import {
-  MyAppButton, MyAppHeader, MyAppTextInput, MyDatePickerAndroid, MyDatePickerIOS,
+  MyAppButton, MyAppHeader, MyAppTextInput, MyDateButton, MyDatePickerAndroid, MyDatePickerIOS,
 } from '../../utils/Components';
 import { selectUser } from '../user/userSlice';
 import { EventProps } from './EventItem';
@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
   },
   datesParent: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     marginTop: 10,
   },
   dateButton: {
-    width: '48%',
+    flex: 1,
     marginHorizontal: 5,
   },
   sysButton: {
@@ -99,14 +99,12 @@ const EditEventModal = () => {
           style={{ height: 70 }}
         />
         <View style={styles.datesParent}>
-          <MyAppButton
-            light
+          <MyDateButton
             style={styles.dateButton}
             title={startDate.toDateString()}
             onPress={() => setShowStartDatePicker(true)}
           />
-          <MyAppButton
-            light
+          <MyDateButton
             style={styles.dateButton}
             title={endDateLabel}
             onPress={() => setShowEndDatePicker(true)}

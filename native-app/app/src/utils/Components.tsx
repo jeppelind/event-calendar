@@ -2,13 +2,21 @@
 import React, { FC, useState } from 'react';
 import {
   Text, TextInputProps, TextProps, StyleSheet, Pressable,
-  PressableProps, StyleProp, ViewStyle, Modal, View,
+  PressableProps, StyleProp, ViewStyle, Modal, View, useColorScheme,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { darkTheme, lightTheme } from './color';
 
 const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'Poppins_400Regular',
+    color: lightTheme.text,
+  },
+  textDark: {
+    color: darkTheme.text,
+  },
   input: {
     fontFamily: 'Poppins_400Regular',
     fontSize: 16,
@@ -17,13 +25,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: lightTheme.input,
+  },
+  inputDark: {
+    backgroundColor: darkTheme.input,
+    color: 'white',
   },
   header: {
     fontFamily: 'Poppins_700Bold',
     fontSize: 28,
-    color: '#666666',
+    color: lightTheme.header,
     width: '100%',
+  },
+  headerDark: {
+    color: darkTheme.header,
   },
   button: {
     height: 44,
@@ -31,21 +46,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#095b91',
+    backgroundColor: lightTheme.primary,
   },
   buttonSecondary: {
     backgroundColor: '#7a7a7a',
-  },
-  buttonLight: {
-    backgroundColor: '#f8f9fa',
   },
   buttonLabel: {
     fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     color: 'white',
-  },
-  buttonLabelLight: {
-    color: 'black',
   },
   buttonPressed: {
     opacity: 0.8,
@@ -59,7 +68,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 4,
-    backgroundColor: '#d0d0c0',
+    backgroundColor: lightTheme.background,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -71,12 +80,17 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: '100%',
   },
+  modalViewDark: {
+    backgroundColor: darkTheme.background,
+  },
 });
 
 export const MyAppText: FC<TextProps> = (props) => {
   const { children, style } = props;
+  const colorScheme = useColorScheme();
+  const darkStyle = colorScheme === 'dark' ? styles.textDark : null;
   return (
-    <Text {...props} style={[{ fontFamily: 'Poppins_400Regular', ...(style as Object) }]}>
+    <Text {...props} style={[styles.text, darkStyle, style]}>
       {children}
     </Text>
   );
@@ -84,8 +98,10 @@ export const MyAppText: FC<TextProps> = (props) => {
 
 export const MyAppHeader: FC<TextProps> = (props) => {
   const { children, style } = props;
+  const colorScheme = useColorScheme();
+  const darkStyle = colorScheme === 'dark' ? styles.headerDark : null;
   return (
-    <Text {...props} style={[styles.header, style]}>
+    <Text {...props} style={[styles.header, darkStyle, style]}>
       {children}
     </Text>
   );
@@ -93,8 +109,10 @@ export const MyAppHeader: FC<TextProps> = (props) => {
 
 export const MyAppTextInput: FC<TextInputProps> = (props) => {
   const { children, style } = props;
+  const colorScheme = useColorScheme();
+  const darkStyle = colorScheme === 'dark' ? styles.inputDark : null;
   return (
-    <TextInput {...props} style={[styles.input, style]}>
+    <TextInput {...props} style={[styles.input, darkStyle, style]}>
       {children}
     </TextInput>
   );
@@ -104,23 +122,19 @@ type CustomButton = PressableProps & {
   title: string,
   style?: StyleProp<ViewStyle> | undefined,
   secondary?: boolean,
-  light?: boolean,
 }
 
 export const MyAppButton: FC<CustomButton> = (props) => {
   const {
-    title, style, secondary, light, onPress,
+    title, style, secondary, onPress,
   } = props;
 
-  const secondaryStyle = (secondary) ? styles.buttonSecondary : {};
-  const lightStyle = (light) ? styles.buttonLight : {};
-  const lightButton = (light) ? styles.buttonLabelLight : {};
-
+  const secondaryStyle = (secondary) ? styles.buttonSecondary : null;
   const getStyle = (isPressed: Boolean) => {
     if (isPressed) {
-      return [styles.button, styles.buttonPressed, secondaryStyle, lightStyle, style];
+      return [styles.button, styles.buttonPressed, secondaryStyle, style];
     }
-    return [styles.button, secondaryStyle, lightStyle, style];
+    return [styles.button, secondaryStyle, style];
   };
 
   return (
@@ -128,7 +142,7 @@ export const MyAppButton: FC<CustomButton> = (props) => {
       style={({ pressed }) => getStyle(pressed)}
       onPress={onPress}
     >
-      <Text style={[styles.buttonLabel, lightButton]}>
+      <Text style={[styles.buttonLabel]}>
         {title}
       </Text>
     </Pressable>
@@ -145,6 +159,39 @@ export const MyAppIconButton: FC<MyAppIconButtonProps> = (props) => {
   return (
     <Pressable style={style} onPress={onPress}>
       <MaterialIcons name={icon} size={32} color="white" />
+    </Pressable>
+  );
+};
+
+type MyDateButtonProps = PressableProps & {
+  title: string,
+  style?: StyleProp<ViewStyle> | undefined,
+ };
+
+export const MyDateButton: FC<MyDateButtonProps> = (props) => {
+  const { title, style, onPress } = props;
+  const colorScheme = useColorScheme();
+  const backgroundColor = colorScheme === 'dark' ? darkTheme.input : lightTheme.input;
+  const textStyle = {
+    color: colorScheme === 'dark' ? darkTheme.text : lightTheme.text,
+    fontSize: 16,
+  };
+
+  const getStyle = (isPressed: Boolean) => {
+    if (isPressed) {
+      return [styles.button, styles.buttonPressed, { backgroundColor }, style];
+    }
+    return [styles.button, { backgroundColor }, style];
+  };
+
+  return (
+    <Pressable
+      style={({ pressed }) => getStyle(pressed)}
+      onPress={onPress}
+    >
+      <Text style={[styles.buttonLabel, textStyle]}>
+        {title}
+      </Text>
     </Pressable>
   );
 };
@@ -182,6 +229,8 @@ export const MyDatePickerAndroid: FC<DatePickerProps> = ({ onClose, startDate, v
 
 export const MyDatePickerIOS: FC<DatePickerProps> = ({ startDate, onClose, visible }) => {
   const [date, setDate] = useState(startDate || new Date());
+  const colorScheme = useColorScheme();
+  const darkStyle = colorScheme === 'dark' ? styles.modalViewDark : null;
 
   const onChange = (_evt: any, selectedDate: Date | undefined) => {
     const newDate = selectedDate || date;
@@ -195,15 +244,15 @@ export const MyDatePickerIOS: FC<DatePickerProps> = ({ startDate, onClose, visib
       animationType="fade"
     >
       <View style={styles.modalParentView}>
-        <View style={styles.modalView}>
+        <View style={[styles.modalView, darkStyle]}>
           <DateTimePicker
             mode="date"
             value={date}
             is24Hour
             display="spinner"
             onChange={onChange}
-            style={{ width: '100%', backgroundColor: 'white' }}
-            textColor="black"
+            style={{ width: '100%' }}
+            textColor={colorScheme === 'dark' ? darkTheme.text : lightTheme.text}
           />
           <View style={{ width: '100%', padding: 10 }}>
             <MyAppButton title="Confirm" onPress={() => onClose(date)} />

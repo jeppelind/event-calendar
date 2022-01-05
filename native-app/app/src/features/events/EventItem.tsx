@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { EntityId } from '@reduxjs/toolkit';
 import React from 'react';
-import { Animated, useWindowDimensions, View } from 'react-native';
+import { Animated, useColorScheme, useWindowDimensions, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import { darkTheme, lightTheme } from '../../utils/color';
 import { MyAppIconButton, MyAppText } from '../../utils/Components';
 import { selectUserToken } from '../user/userSlice';
 import styles from './EventList.style';
@@ -81,6 +82,8 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
     name, description, startDate, endDate,
   } = event;
   const { width } = useWindowDimensions();
+  const colorScheme = useColorScheme();
+  const backgroundColor = (colorScheme === 'light') ? lightTheme.background : darkTheme.background;
 
   const swipeMenu = (_: Animated.AnimatedInterpolation, dragX: Animated.AnimatedInterpolation) => {
     const trans = dragX.interpolate({
@@ -91,7 +94,7 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
       <Animated.View style={{
         width: '100%',
         // justifyContent: 'center',
-        backgroundColor: '#095b91',
+        backgroundColor: lightTheme.primary,
         transform: [{ translateX: trans }],
       }}
       >
@@ -124,7 +127,7 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
 
   return (
     <Swipeable renderRightActions={swipeMenu} rightThreshold={width * 0.2}>
-      <Animated.View style={styles.eventItem}>
+      <Animated.View style={{ backgroundColor }}>
         <View style={styles.event}>
           <View style={styles.dateParent}>
             <MyAppText style={styles.date}>{formatDate(startDate, endDate)}</MyAppText>

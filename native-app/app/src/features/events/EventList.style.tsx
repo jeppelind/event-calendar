@@ -8,7 +8,6 @@ export default StyleSheet.create({
   eventItem: {
     // flex: 1,
     // flexDirection: 'row',
-    backgroundColor: '#ecf0f1',
   },
   event: {
     // flex: 1,
@@ -39,6 +38,5 @@ export default StyleSheet.create({
   },
   buttonInteraction: {
     padding: 20,
-    // backgroundColor: 'hotpink',
   },
 });

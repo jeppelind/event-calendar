@@ -9,10 +9,11 @@ import {
   // eslint-disable-next-line camelcase
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import RootNavigation from './navigation';
 import { useAppDispatch } from './app/store';
 import { loadUserData } from './features/user/userSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { lightTheme } from './utils/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,8 +42,8 @@ const App = () => {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="#095b91" />
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#095b91' }}>
+      <StatusBar barStyle="light-content" backgroundColor={lightTheme.primary} />
+      <SafeAreaView style={{ flex: 1, backgroundColor: lightTheme.primary }}>
         <RootNavigation />
       </SafeAreaView>
     </>

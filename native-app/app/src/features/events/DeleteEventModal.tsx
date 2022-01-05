@@ -22,14 +22,10 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // width: '100%',
     marginBottom: 20,
   },
   button: {
     flex: 1,
-    // width: 'auto',
-    // marginEnd: 0,
-    // marginStart: 0,
     marginHorizontal: 5,
   },
 });
@@ -60,10 +56,18 @@ const DeleteEventModal = () => {
       <MyAppHeader>Delete event</MyAppHeader>
       <View style={styles.content}>
         <MyAppText style={{ fontSize: 17, marginVertical: 20 }}>{name}</MyAppText>
-        <View style={styles.buttons}>
-          <MyAppButton secondary title="Cancel" style={styles.button} onPress={() => navigation.goBack()} />
-          <MyAppButton title="Delete" style={[styles.button, { backgroundColor: 'darkred' }]} onPress={onConfirm} />
-        </View>
+        { isLoading
+          ? (
+            <View style={styles.buttons}>
+              <MyAppText style={{ flex: 1, textAlign: 'center' }}>Deleting...</MyAppText>
+            </View>
+          )
+          : (
+            <View style={styles.buttons}>
+              <MyAppButton secondary title="Cancel" style={styles.button} onPress={() => navigation.goBack()} />
+              <MyAppButton title="Delete" style={[styles.button, { backgroundColor: 'darkred' }]} onPress={onConfirm} />
+            </View>
+          )}
       </View>
     </View>
   );
