@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-endpoint-config
+data:
+  api_url: http://api
+  token: 'test'
+  mongodb_uri: 'mongodb://localhost:27017/event-calendar'
