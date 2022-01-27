@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { EntityId } from '@reduxjs/toolkit';
 import React from 'react';
-import { Animated, useColorScheme, useWindowDimensions, View } from 'react-native';
+import {
+  Animated, useColorScheme, useWindowDimensions, View,
+} from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { darkTheme, lightTheme } from '../../utils/color';
