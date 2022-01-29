@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 0.45.1"
+  },
+  "build": {
+    "production": {
+      "env": {
+        "ENDPOINT": "AddBackendUrl",
+        "ENTRY_FILE": "./src/index.tsx"
+      }
+    },
+    "development": {
+      "extends": "production",
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "extends": "production",
+      "distribution": "internal"
+    },
+    "local": {
+      "extends": "production",
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

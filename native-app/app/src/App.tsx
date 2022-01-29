@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  StatusBar, StyleSheet, Text, View,
-} from 'react-native';
+import { StatusBar } from 'react-native';
 import {
   useFonts,
   // eslint-disable-next-line camelcase
@@ -10,19 +8,11 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AppLoading from 'expo-app-loading';
 import RootNavigation from './navigation';
 import { useAppDispatch } from './app/store';
 import { loadUserData } from './features/user/userSlice';
 import { lightTheme } from './utils/color';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    marginTop: StatusBar.currentHeight || 25,
-  },
-});
 
 const App = () => {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_700Bold });
@@ -33,11 +23,7 @@ const App = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <AppLoading />;
   }
 
   return (
