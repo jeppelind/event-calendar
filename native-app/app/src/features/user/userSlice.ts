@@ -37,7 +37,8 @@ type signInUserParams = {
 }
 
 export const signInUser = createAsyncThunk<{}, signInUserParams>('user/signInUser', async (userInput) => {
-  const response = await fetch(`${ENDPOINT}/login`, {
+  const url = `${ENDPOINT}/login`;
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userInput),

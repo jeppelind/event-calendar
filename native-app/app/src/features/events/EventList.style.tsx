@@ -37,6 +37,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   buttonInteraction: {
-    padding: 20,
+    paddingHorizontal: 25,
+    height: '100%',
+    justifyContent: 'center',
   },
 });

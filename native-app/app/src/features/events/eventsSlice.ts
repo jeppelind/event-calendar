@@ -17,8 +17,9 @@ const fetchGraphQL = async (query: string, token?: string) => {
   if (token) {
     headers = { ...headers, ...{ Authorization: `Bearer ${token}` } };
   }
+  const url = `${ENDPOINT}/graphql`;
 
-  const response = await fetch(`${ENDPOINT}/graphql`, {
+  const response = await fetch(url, {
     method: 'POST',
     headers,
     body: JSON.stringify({ query }),

@@ -94,8 +94,6 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
     });
     return (
       <Animated.View style={{
-        width: '100%',
-        // justifyContent: 'center',
         backgroundColor: lightTheme.primary,
         transform: [{ translateX: trans }],
       }}
@@ -103,9 +101,6 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
         <View style={{
           flex: 1,
           flexDirection: 'row',
-          alignItems: 'center',
-          marginLeft: 'auto',
-          marginRight: 'auto',
         }}
         >
           {userToken && (
@@ -116,7 +111,7 @@ const EventItem = ({ eventId } : { eventId: EntityId}) => {
                 onPress={() => navigation.navigate('EditEventModal', { id: eventId.toString() })}
               />
               <MyAppIconButton
-                style={styles.buttonInteraction}
+                style={[styles.buttonInteraction, { backgroundColor: '#851c1c' }]}
                 icon="delete"
                 onPress={() => navigation.navigate('DeleteEventModal', { id: eventId.toString() })}
               />

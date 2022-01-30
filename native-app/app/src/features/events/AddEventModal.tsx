@@ -27,8 +27,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 5,
   },
-  sysButton: {
-    marginTop: 10,
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });
 
@@ -104,9 +110,9 @@ const AddEventModal = () => {
             onPress={() => setShowEndDatePicker(true)}
           />
         </View>
-        <View style={{ marginTop: 10, width: '100%' }}>
-          <MyAppButton title="Create event" style={styles.sysButton} onPress={onSubmit} />
-          <MyAppButton secondary title="Cancel" style={styles.sysButton} onPress={() => navigation.goBack()} />
+        <View style={styles.buttons}>
+          <MyAppButton secondary title="Cancel" style={styles.button} onPress={() => navigation.goBack()} />
+          <MyAppButton title="Create" style={styles.button} onPress={onSubmit} />
         </View>
         {Platform.OS === 'ios'
           ? (
