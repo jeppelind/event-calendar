@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import {
   useFonts,
@@ -13,16 +13,26 @@ import RootNavigation from './navigation';
 import { useAppDispatch } from './app/store';
 import { loadUserData } from './features/user/userSlice';
 import { lightTheme } from './utils/color';
+import initI18 from './localization/i18n';
 
 const App = () => {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_700Bold });
+  const [localeLoaded, setLocaleLoaded] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(loadUserData());
   }, []);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    const initTranslations = async () => {
+      await initI18();
+      setLocaleLoaded(true);
+    };
+    initTranslations();
+  }, []);
+
+  if (!fontsLoaded || !localeLoaded) {
     return <AppLoading />;
   }
 

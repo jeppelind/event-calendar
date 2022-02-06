@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { unwrapResult } from '@reduxjs/toolkit';
+import i18next from 'i18next';
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -53,19 +54,19 @@ const DeleteEventModal = () => {
 
   return (
     <View style={styles.container}>
-      <MyAppHeader>Delete event</MyAppHeader>
+      <MyAppHeader>{i18next.t('events.deleteLabel')}</MyAppHeader>
       <View style={styles.content}>
         <MyAppText style={{ fontSize: 17, marginVertical: 20 }}>{name}</MyAppText>
         { isLoading
           ? (
             <View style={styles.buttons}>
-              <MyAppText style={{ flex: 1, textAlign: 'center' }}>Deleting...</MyAppText>
+              <MyAppText style={{ flex: 1, textAlign: 'center' }}>{i18next.t('events.deleting')}</MyAppText>
             </View>
           )
           : (
             <View style={styles.buttons}>
-              <MyAppButton secondary title="Cancel" style={styles.button} onPress={() => navigation.goBack()} />
-              <MyAppButton title="Delete" style={[styles.button, { backgroundColor: 'darkred' }]} onPress={onConfirm} />
+              <MyAppButton secondary title={i18next.t('cancel')} style={styles.button} onPress={() => navigation.goBack()} />
+              <MyAppButton title={i18next.t('events.delete')} style={[styles.button, { backgroundColor: 'darkred' }]} onPress={onConfirm} />
             </View>
           )}
       </View>

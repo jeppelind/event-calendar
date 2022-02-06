@@ -4,6 +4,7 @@ import { DrawerActions, NavigationContainer, useNavigation } from '@react-naviga
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { useColorScheme } from 'react-native';
+import i18next from 'i18next';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
 import { MyAppIconButton } from './utils/Components';
@@ -67,17 +68,17 @@ const MainNavigationStack = () => {
         <Stack.Screen
           name="DeleteEventModal"
           component={DeleteEventModal}
-          options={{ title: 'Delete event' }}
+          options={{ title: i18next.t('events.deleteLabel') }}
         />
         <Stack.Screen
           name="AddEventModal"
           component={AddEventModal}
-          options={{ title: 'New event' }}
+          options={{ title: i18next.t('events.createLabel') }}
         />
         <Stack.Screen
           name="EditEventModal"
           component={EditEventModal}
-          options={{ title: 'Edit event' }}
+          options={{ title: i18next.t('events.editLabel') }}
         />
       </Stack.Group>
     </Stack.Navigator>
@@ -94,14 +95,14 @@ const CustomDrawerContent = () => {
   return (
     <DrawerContentScrollView>
       <DrawerItem
-        label="Start"
+        label={i18next.t('navigation.home')}
         labelStyle={labelStyle}
         onPress={() => navigation.navigate('Home')}
       />
       {
         user.name ? (
           <DrawerItem
-            label="Log out"
+            label={i18next.t('navigation.logOut')}
             labelStyle={labelStyle}
             onPress={() => {
               dispatch(deleteUserData());
@@ -110,7 +111,7 @@ const CustomDrawerContent = () => {
           />
         ) : (
           <DrawerItem
-            label="Log in"
+            label={i18next.t('navigation.logIn')}
             labelStyle={labelStyle}
             onPress={() => navigation.navigate('Login')}
           />

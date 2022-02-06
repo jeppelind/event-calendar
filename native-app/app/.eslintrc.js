@@ -28,6 +28,7 @@ module.exports = {
     },
   },
   rules: {
+    'linebreak-style': 'off',
     'import/no-unresolved': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',

@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { unwrapResult } from '@reduxjs/toolkit';
+import i18next from 'i18next';
 import React, { useState } from 'react';
 import {
   View, StyleSheet, ActivityIndicator, TouchableWithoutFeedback, Keyboard,
@@ -51,19 +52,19 @@ const Login = () => {
         <MyAppHeader>Log in</MyAppHeader>
         <MyAppTextInput
           value={email}
-          placeholder="Email"
+          placeholder={i18next.t('user.email')}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
         <MyAppTextInput
           value={password}
-          placeholder="Password"
+          placeholder={i18next.t('user.password')}
           onChangeText={setPassword}
           secureTextEntry
         />
         <MyAppButton
-          title="Log in"
+          title={i18next.t('user.logIn')}
           disabled={isLoadingUser}
           onPress={onSubmit}
           style={{ marginTop: 10 }}

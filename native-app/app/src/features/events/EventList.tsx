@@ -1,4 +1,5 @@
 import { EntityId, unwrapResult } from '@reduxjs/toolkit';
+import i18next from 'i18next';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList, View, ListRenderItem,
@@ -28,10 +29,10 @@ const EventList = () => {
 
   const footer = () => {
     if (isAllDataFetched) {
-      return <View style={styles.footer}><MyAppText>No more events</MyAppText></View>;
+      return <View style={styles.footer}><MyAppText>{i18next.t('events.noMoreEvents')}</MyAppText></View>;
     }
     if (isLoadingEvents) {
-      return <View style={styles.footer}><MyAppText>Loading...</MyAppText></View>;
+      return <View style={styles.footer}><MyAppText>{i18next.t('events.loading')}</MyAppText></View>;
     }
     return <View style={styles.footer} />;
   };

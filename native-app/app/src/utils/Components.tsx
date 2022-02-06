@@ -7,6 +7,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import i18next from 'i18next';
 import { darkTheme, lightTheme } from './color';
 
 const styles = StyleSheet.create({
@@ -255,8 +256,8 @@ export const MyDatePickerIOS: FC<DatePickerProps> = ({ startDate, onClose, visib
             textColor={colorScheme === 'dark' ? darkTheme.text : lightTheme.text}
           />
           <View style={{ width: '100%', padding: 10 }}>
-            <MyAppButton title="Confirm" onPress={() => onClose(date)} />
-            <MyAppButton secondary title="Cancel" onPress={() => onClose()} style={{ marginTop: 10 }} />
+            <MyAppButton title={i18next.t('confirm')} onPress={() => onClose(date)} />
+            <MyAppButton secondary title={i18next.t('cancel')} onPress={() => onClose()} style={{ marginTop: 10 }} />
           </View>
         </View>
       </View>

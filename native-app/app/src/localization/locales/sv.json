@@ -1,0 +1,29 @@
+{
+  "events": {
+    "create": "Skapa",
+    "createLabel": "Lägg till event",
+    "delete": "Radera",
+    "deleteLabel": "Radera event",
+    "deleting": "Raderar...",
+    "description": "Beskrivning",
+    "editLabel": "Redigera event",
+    "endDate": "Slutdatum",
+    "loading": "Laddar...",
+    "noMoreEvents": "Inga fler event",
+    "startDate": "Startdatum",
+    "title": "Titel"
+  },
+  "navigation": {
+    "home": "Start",
+    "logIn": "Logga in",
+    "logOut": "Logga ut"
+  },
+  "user": {
+    "email": "E-post",
+    "logIn": "Logga in",
+    "password": "Lösenord"
+  },
+  "cancel": "Avbryt",
+  "confirm": "Ok",
+  "save": "Spara"
+}

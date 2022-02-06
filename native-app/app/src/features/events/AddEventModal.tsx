@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { unwrapResult } from '@reduxjs/toolkit';
+import i18next from 'i18next';
 import React, { useState } from 'react';
 import {
   View, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard,
@@ -49,7 +50,7 @@ const AddEventModal = () => {
   const dispatch = useAppDispatch();
   const user = useSelector(selectUser);
 
-  const endDateLabel = (endDate < startDate) ? 'End date' : endDate.toDateString();
+  const endDateLabel = (endDate < startDate) ? i18next.t('events.endDate') : endDate.toDateString();
 
   const updateStartDate = (newDate: Date | undefined) => {
     setShowStartDatePicker(false);
@@ -84,15 +85,15 @@ const AddEventModal = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <MyAppHeader>Add new event</MyAppHeader>
+        <MyAppHeader>{i18next.t('events.createLabel')}</MyAppHeader>
         <MyAppTextInput
           value={title}
-          placeholder="Title"
+          placeholder={i18next.t('events.title')}
           onChangeText={setTitle}
         />
         <MyAppTextInput
           value={description}
-          placeholder="Description"
+          placeholder={i18next.t('events.description')}
           onChangeText={setDescription}
           multiline
           numberOfLines={2}
@@ -111,8 +112,8 @@ const AddEventModal = () => {
           />
         </View>
         <View style={styles.buttons}>
-          <MyAppButton secondary title="Cancel" style={styles.button} onPress={() => navigation.goBack()} />
-          <MyAppButton title="Create" style={styles.button} onPress={onSubmit} />
+          <MyAppButton secondary title={i18next.t('cancel')} style={styles.button} onPress={() => navigation.goBack()} />
+          <MyAppButton title={i18next.t('events.create')} style={styles.button} onPress={onSubmit} />
         </View>
         {Platform.OS === 'ios'
           ? (
