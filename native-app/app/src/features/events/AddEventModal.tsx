@@ -72,7 +72,7 @@ const AddEventModal = () => {
         title,
         description,
         startDate,
-        endDate,
+        endDate: startDate < endDate ? endDate : startDate,
         token: user.token,
       }));
       unwrapResult(res);

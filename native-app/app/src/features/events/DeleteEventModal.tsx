@@ -39,7 +39,7 @@ const DeleteEventModal = () => {
   const { id } = route.params;
   const token = useSelector(selectUserToken);
   const event = useSelector((state) => selectEventById(state, id)) as EventProps;
-  const { name } = event;
+  const name = (event) ? event.name : '';
 
   const onConfirm = async () => {
     try {
