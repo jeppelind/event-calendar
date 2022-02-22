@@ -34,6 +34,8 @@ const Login = () => {
   const isLoadingUser = useSelector(selectUserLoading);
   const navigation = useNavigation();
 
+  const isInputValid = email.length > 3 && password.length > 3;
+
   const onSubmit = async () => {
     setError(null);
     try {
@@ -49,7 +51,7 @@ const Login = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <MyAppHeader>Log in</MyAppHeader>
+        <MyAppHeader>{i18next.t('user.logIn')}</MyAppHeader>
         <MyAppTextInput
           value={email}
           placeholder={i18next.t('user.email')}
@@ -65,7 +67,7 @@ const Login = () => {
         />
         <MyAppButton
           title={i18next.t('user.logIn')}
-          disabled={isLoadingUser}
+          disabled={isLoadingUser || !isInputValid}
           onPress={onSubmit}
           style={{ marginTop: 10 }}
         />

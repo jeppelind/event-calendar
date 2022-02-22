@@ -3,17 +3,18 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@rea
 import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
-import { useColorScheme } from 'react-native';
+import { Image, useColorScheme, View } from 'react-native';
 import i18next from 'i18next';
 import HomeScreen from './features/homescreen/HomeScreen';
 import Login from './features/user/Login';
-import { MyAppIconButton } from './utils/Components';
+import { MyAppIconButton, MyAppText } from './utils/Components';
 import { useAppDispatch } from './app/store';
 import { deleteUserData, selectUser } from './features/user/userSlice';
 import AddEventModal from './features/events/AddEventModal';
 import DeleteEventModal from './features/events/DeleteEventModal';
 import EditEventModal from './features/events/EditEventModal';
 import { darkTheme, lightTheme } from './utils/color';
+import appConf from '../app.json';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -93,30 +94,44 @@ const CustomDrawerContent = () => {
   const labelStyle = { fontSize: 16, fontFamily: 'Poppins_400Regular' };
 
   return (
-    <DrawerContentScrollView>
-      <DrawerItem
-        label={i18next.t('navigation.home')}
-        labelStyle={labelStyle}
-        onPress={() => navigation.navigate('Home')}
-      />
-      {
-        user.name ? (
-          <DrawerItem
-            label={i18next.t('navigation.logOut')}
-            labelStyle={labelStyle}
-            onPress={() => {
-              dispatch(deleteUserData());
-              navigation.dispatch(DrawerActions.closeDrawer());
-            }}
+    <DrawerContentScrollView
+      contentContainerStyle={{ flex: 1, justifyContent: 'space-between' }}
+    >
+      <View>
+        <View style={{ alignItems: 'center', padding: 10 }}>
+          <Image
+            style={{ width: 80, height: 80 }}
+            // eslint-disable-next-line global-require
+            source={require('../assets/icon.png')}
           />
-        ) : (
-          <DrawerItem
-            label={i18next.t('navigation.logIn')}
-            labelStyle={labelStyle}
-            onPress={() => navigation.navigate('Login')}
-          />
-        )
-      }
+        </View>
+        <DrawerItem
+          label={i18next.t('navigation.home')}
+          labelStyle={labelStyle}
+          onPress={() => navigation.navigate('Home')}
+        />
+        {
+          user.name ? (
+            <DrawerItem
+              label={i18next.t('navigation.logOut')}
+              labelStyle={labelStyle}
+              onPress={() => {
+                dispatch(deleteUserData());
+                navigation.dispatch(DrawerActions.closeDrawer());
+              }}
+            />
+          ) : (
+            <DrawerItem
+              label={i18next.t('navigation.logIn')}
+              labelStyle={labelStyle}
+              onPress={() => navigation.navigate('Login')}
+            />
+          )
+        }
+      </View>
+      <MyAppText style={{ alignSelf: 'center', padding: 10, opacity: 0.3, fontSize: 12 }}>
+        {appConf.expo.version}
+      </MyAppText>
     </DrawerContentScrollView>
   );
 };

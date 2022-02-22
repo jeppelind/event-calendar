@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
   buttonPressed: {
     opacity: 0.8,
   },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
   modalParentView: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -127,20 +130,27 @@ type CustomButton = PressableProps & {
 
 export const MyAppButton: FC<CustomButton> = (props) => {
   const {
-    title, style, secondary, onPress,
+    title, style, secondary, disabled, onPress,
   } = props;
 
-  const secondaryStyle = (secondary) ? styles.buttonSecondary : null;
   const getStyle = (isPressed: Boolean) => {
-    if (isPressed) {
-      return [styles.button, styles.buttonPressed, secondaryStyle, style];
+    const styleArr = [styles.button, style];
+    if (secondary) {
+      styleArr.push(styles.buttonSecondary);
     }
-    return [styles.button, secondaryStyle, style];
+    if (disabled) {
+      styleArr.push(styles.buttonDisabled);
+    }
+    if (isPressed) {
+      styleArr.push(styles.buttonPressed);
+    }
+    return styleArr;
   };
 
   return (
     <Pressable
       style={({ pressed }) => getStyle(pressed)}
+      disabled={disabled}
       onPress={onPress}
     >
       <Text style={[styles.buttonLabel]}>
