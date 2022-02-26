@@ -3,6 +3,7 @@ export {};
 export type RootStackParamList = {
   Home: undefined,
   Login: undefined,
+  Settings: undefined,
   AddEventModal: undefined,
   DeleteEventModal: { id: string },
   EditEventModal: { id: string },

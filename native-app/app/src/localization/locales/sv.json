@@ -16,7 +16,11 @@
   "navigation": {
     "home": "Start",
     "logIn": "Logga in",
-    "logOut": "Logga ut"
+    "logOut": "Logga ut",
+    "settings": "Inställningar"
+  },
+  "settings": {
+    "language": "Språk"
   },
   "user": {
     "email": "E-post",

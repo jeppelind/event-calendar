@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import eventsReducer from '../features/events/eventsSlice';
+import settingsSlice from '../features/settings/settingsSlice';
 import userReducer from '../features/user/userSlice';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     events: eventsReducer,
+    settings: settingsSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

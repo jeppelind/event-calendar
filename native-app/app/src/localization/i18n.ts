@@ -3,9 +3,9 @@ import * as Localization from 'expo-localization';
 import en from './locales/en.json';
 import sv from './locales/sv.json';
 
-const initI18 = () => i18next.init({
+const initI18 = (language: string) => i18next.init({
   compatibilityJSON: 'v3',
-  lng: Localization.locale,
+  lng: language === 'system' ? Localization.locale : language,
   fallbackLng: 'en',
   resources: {
     en: { translation: en },

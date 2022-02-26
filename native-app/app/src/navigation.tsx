@@ -15,6 +15,7 @@ import DeleteEventModal from './features/events/DeleteEventModal';
 import EditEventModal from './features/events/EditEventModal';
 import { darkTheme, lightTheme } from './utils/color';
 import appConf from '../app.json';
+import Settings from './features/settings/Settings';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,6 +64,13 @@ const MainNavigationStack = () => {
         <Stack.Screen
           name="Login"
           component={Login}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            title: i18next.t('navigation.settings'),
+          }}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -128,6 +136,11 @@ const CustomDrawerContent = () => {
             />
           )
         }
+        <DrawerItem
+          label={i18next.t('navigation.settings')}
+          labelStyle={labelStyle}
+          onPress={() => navigation.navigate('Settings')}
+        />
       </View>
       <MyAppText style={{ alignSelf: 'center', padding: 10, opacity: 0.3, fontSize: 12 }}>
         {appConf.expo.version}

@@ -14,6 +14,7 @@ import { useAppDispatch } from './app/store';
 import { loadUserData } from './features/user/userSlice';
 import { lightTheme } from './utils/color';
 import initI18 from './localization/i18n';
+import { loadSettings } from './features/settings/settingsSlice';
 
 const App = () => {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_700Bold });
@@ -26,7 +27,8 @@ const App = () => {
 
   useEffect(() => {
     const initTranslations = async () => {
-      await initI18();
+      const settings = await dispatch(loadSettings());
+      await initI18(settings.payload.language);
       setLocaleLoaded(true);
     };
     initTranslations();

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Evenemangskalendern",
     "slug": "evenemangskalendern",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -27,7 +27,7 @@
         "backgroundColor": "#1c5885"
       },
       "package": "com.jeppelind.evenemangskalendern",
-      "versionCode": 3,
+      "versionCode": 5,
       "permissions": []
     },
     "web": {
