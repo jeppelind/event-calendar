@@ -6,8 +6,10 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Picker, PickerProps } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import i18next from 'i18next';
+import { ItemValue } from '@react-native-picker/picker/typings/Picker';
 import { darkTheme, lightTheme } from './color';
 
 const styles = StyleSheet.create({
@@ -171,6 +173,100 @@ export const MyAppIconButton: FC<MyAppIconButtonProps> = (props) => {
     <Pressable style={style} onPress={onPress}>
       <MaterialIcons name={icon} size={32} color="white" />
     </Pressable>
+  );
+};
+
+type MyPickerProps = PickerProps & {
+  options: {
+    key: string,
+    value: string,
+  }[]
+}
+
+export const MyPickerAndroid: FC<MyPickerProps> = (props) => {
+  const { options, selectedValue, onValueChange } = props;
+  const colorScheme = useColorScheme();
+  return (
+    <View style={{
+      borderRadius: 5,
+      backgroundColor: colorScheme === 'dark' ? darkTheme.input : lightTheme.input,
+    }}
+    >
+      <Picker
+        selectedValue={selectedValue}
+        onValueChange={onValueChange}
+        style={{
+          color: colorScheme === 'dark' ? darkTheme.text : lightTheme.text,
+        }}
+      >
+        {
+          options.map((opt) => <Picker.Item key={opt.key} label={opt.value} value={opt.key} />)
+        }
+      </Picker>
+    </View>
+  );
+};
+
+export const MyPickerIOS: FC<MyPickerProps> = (props) => {
+  const {
+    options, selectedValue, onValueChange,
+  } = props;
+  const [visible, setVisible] = useState(false);
+  const [selected, setSelected] = useState<ItemValue>(selectedValue || '');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const colorScheme = useColorScheme();
+  const darkStyle = colorScheme === 'dark' ? styles.modalViewDark : null;
+
+  const getLabel = () => {
+    const label = options.find((option) => option.key === selected);
+    return label?.value || '';
+  };
+
+  const changeValue = (value: ItemValue, index: number) => {
+    setSelected(value);
+    setSelectedIndex(index);
+  };
+
+  const onClose = (save: boolean) => {
+    if (save && onValueChange) {
+      onValueChange(selected, selectedIndex);
+    }
+    setVisible(false);
+  };
+
+  return (
+    <View>
+      <MyAppButton
+        title={getLabel()}
+        onPress={() => setVisible(true)}
+        secondary
+      />
+      <Modal
+        visible={visible}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalParentView}>
+          <View style={[styles.modalView, darkStyle]}>
+            <Picker
+              selectedValue={selected}
+              onValueChange={changeValue}
+              style={{ width: '100%' }}
+              itemStyle={{ color: colorScheme === 'dark' ? darkTheme.text : lightTheme.text }}
+            >
+              {
+                // eslint-disable-next-line max-len
+                options.map((opt) => <Picker.Item key={opt.key} label={opt.value} value={opt.key} />)
+              }
+            </Picker>
+            <View style={{ width: '100%', padding: 10 }}>
+              <MyAppButton title={i18next.t('confirm')} onPress={() => onClose(true)} />
+              <MyAppButton secondary title={i18next.t('cancel')} onPress={() => onClose(false)} style={{ marginTop: 10 }} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 

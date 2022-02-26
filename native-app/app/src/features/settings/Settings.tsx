@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, StyleSheet, Platform } from 'react-native';
 import i18next, { changeLanguage } from 'i18next';
 import { useSelector } from 'react-redux';
-import { MyAppText } from '../../utils/Components';
+import { MyAppText, MyPickerAndroid, MyPickerIOS } from '../../utils/Components';
 import { changeLanguageSetting, saveSettings, selectSettingsLanguage } from './settingsSlice';
 import { useAppDispatch } from '../../app/store';
 
 const languages = [
-  { key: 'system', label: 'Auto' },
-  { key: 'en', label: 'English' },
-  { key: 'sv', label: 'Svenska' },
+  { key: 'system', value: 'Auto' },
+  { key: 'en', value: 'English' },
+  { key: 'sv', value: 'Svenska' },
 ];
 
 const styles = StyleSheet.create({
@@ -36,14 +35,20 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <MyAppText>{`${i18next.t('settings.language')}:`}</MyAppText>
-      <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={onSelectLanguage}
-      >
-        {
-          languages.map((opt) => <Picker.Item key={opt.key} label={opt.label} value={opt.key} />)
-        }
-      </Picker>
+      {Platform.OS === 'ios'
+        ? (
+          <MyPickerIOS
+            options={languages}
+            selectedValue={selectedLanguage}
+            onValueChange={(value) => onSelectLanguage(value.toString())}
+          />
+        ) : (
+          <MyPickerAndroid
+            options={languages}
+            selectedValue={selectedLanguage}
+            onValueChange={(value) => onSelectLanguage(value.toString())}
+          />
+        )}
     </View>
   );
 };
