@@ -19,7 +19,8 @@
     "platforms": ["android", "ios", "web"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.jeppelind.evenemangskalendern"
+      "bundleIdentifier": "com.jeppelind.evenemangskalendern",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
