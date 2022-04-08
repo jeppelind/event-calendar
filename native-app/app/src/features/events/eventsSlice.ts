@@ -124,7 +124,9 @@ export const updateEvent = createAsyncThunk<void, updateEventParams>('events/edi
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
-  reducers: {},
+  reducers: {
+    clearEvents: eventsAdapter.removeAll,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchEvents.pending, (state) => {
       state.loading = true;
@@ -142,7 +144,9 @@ const eventsSlice = createSlice({
   },
 });
 
-export default eventsSlice.reducer;
+export const {
+  clearEvents,
+} = eventsSlice.actions;
 
 export const {
   selectIds: selectEventIds,
@@ -150,3 +154,5 @@ export const {
 } = eventsAdapter.getSelectors((state: RootStateOrAny) => state.events);
 
 export const selectEventsLoading = (state: RootStateOrAny) => state.events.loading;
+
+export default eventsSlice.reducer;

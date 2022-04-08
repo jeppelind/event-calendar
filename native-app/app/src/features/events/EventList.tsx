@@ -10,6 +10,7 @@ import { MyAppText } from '../../utils/Components';
 import EventItem from './EventItem';
 import styles from './EventList.style';
 import {
+  clearEvents,
   fetchEvents,
   selectEventIds,
   selectEventsLoading,
@@ -18,6 +19,7 @@ import {
 const EventList = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isAllDataFetched, setIsAllDataFetched] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const eventsPerFetch = 25;
   const dispatch = useAppDispatch();
   const eventIds = useSelector(selectEventIds);
@@ -43,20 +45,33 @@ const EventList = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchMoreEvents = async () => {
-      try {
-        const eventParams = { startIndex: currentIdx, endIndex: currentIdx + eventsPerFetch };
-        const res = await dispatch(fetchEvents(eventParams));
-        unwrapResult(res);
-        if (res.payload.length === 0) {
-          setIsAllDataFetched(true);
-        }
-      } catch (err) {
-        console.log(err);
+  const fetchData = async (startIndex: number, endIndex: number) => {
+    try {
+      const eventParams = { startIndex, endIndex };
+      const res = await dispatch(fetchEvents(eventParams));
+      unwrapResult(res);
+      if (res.payload.length === 0) {
+        setIsAllDataFetched(true);
       }
-    };
-    fetchMoreEvents();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onRefresh = async () => {
+    if (!isLoadingEvents && !isRefreshing) {
+      setIsRefreshing(true);
+      setCurrentIdx(0);
+      dispatch(clearEvents());
+      await fetchData(0, eventsPerFetch);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isRefreshing) {
+      fetchData(currentIdx, currentIdx + eventsPerFetch);
+    }
   }, [dispatch, currentIdx]);
 
   return (
@@ -67,6 +82,8 @@ const EventList = () => {
       keyExtractor={(item) => item.toString()}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
+      onRefresh={onRefresh}
+      refreshing={isRefreshing}
       ListFooterComponent={footer}
     />
   );
