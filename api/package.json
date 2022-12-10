@@ -9,6 +9,7 @@
     "postbuild": "copyfiles -u 1 src/graphql-data/schemas/*.graphql dist",
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "generate": "graphql-codegen",
+    "start:local": "cross-env CACHE_PROVIDER=local ts-node -r dotenv/config src/index.ts",
     "start:dev": "npm run generate && npm run test && ts-node -r dotenv/config src/index.ts",
     "start": "node dist/index.js"
   },

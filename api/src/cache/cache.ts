@@ -1,36 +1,25 @@
-import Redis from 'ioredis';
 import { EventModel } from '../graphql-data/models';
+import { LocalCache } from './local';
+import { RedisCache } from './redis';
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST
-});
-
-export const disconnect = () => {
-  redis.disconnect(false);
+var cache: LocalCache | RedisCache;
+if (process.env.CACHE_PROVIDER === 'local') {
+  cache = new LocalCache();
+} else {
+  cache = new RedisCache();
 }
 
 export const getEventCache = async () => {
-  try {
-    const data = await redis.get('upcoming-events');
-    const parsedData: EventModel[] = JSON.parse(data);
-    return parsedData;
-  } catch (err) {
-    console.error(err);
-  }
+  const events = await cache.get();
+  return events;
 }
 
-export const setEventCache = async (events: EventModel[], expiration?: number) => {
-  try {
-    const result = await redis.set('upcoming-events', JSON.stringify(events));
-    const cacheExpiration = expiration || parseInt(process.env.CACHE_EXPIRATION);
-    await redis.expire('upcoming-events', cacheExpiration);
-    return result;
-  } catch (err) {
-    console.error(err);
-  }
+export const setEventCache = async (events: EventModel[]) => {
+  const result = await cache.set(events);
+  return result;
 }
 
 export const clearEventCache = async () => {
-  const result = redis.del('upcoming-events');
+  const result = cache.clear();
   return result;
 }

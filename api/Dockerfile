@@ -19,6 +19,7 @@ RUN npm install --only=prod
 
 ENV PORT=8080
 ENV CACHE_EXPIRATION=14400
+ENV CACHE_PROVIDER=REDIS
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

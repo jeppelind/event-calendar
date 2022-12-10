@@ -58,7 +58,7 @@ describe('API', () => {
     it('getUpcomingEvents', async () => {
       const stub = sinon.stub(db, 'getUpcomingEvents').resolves([{ name: 'Testname', startDate: new Date() }]);
       const stub2 = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
-      const stub3 = sinon.stub(cache, 'getEventCache').resolves(null);
+      const stub3 = sinon.stub(cache, 'getEventCache').resolves([]);
       const stub4 = sinon.stub(cache, 'setEventCache').resolves('OK');
 
       const query = `
@@ -75,6 +75,30 @@ describe('API', () => {
       stub2.restore();
       stub3.restore();
       stub4.restore();
+
+      const expected = { data: { getUpcomingEvents: [{ name: 'Testname' }] } }
+      expect(result).to.have.status(200);
+      expect(result.body).to.deep.equal(expected);
+    });
+
+    it('getUpcomingEvents with cache', async () => {
+      const stub = sinon.stub(db, 'getUserByToken').resolves({ name: 'Test', token: '', role: 1 });
+      const stub2 = sinon.stub(cache, 'getEventCache').resolves([{ name: 'Testname', startDate: new Date() }]);
+      const stub3 = sinon.stub(cache, 'setEventCache').resolves('OK');
+
+      const query = `
+      {
+        getUpcomingEvents {
+          name
+        }
+      }`;
+      const result = await request(server)
+        .get(`/graphql?query=${query}`)
+        .set('Authorization', authToken);
+
+      stub.restore();
+      stub2.restore();
+      stub3.restore();
 
       const expected = { data: { getUpcomingEvents: [{ name: 'Testname' }] } }
       expect(result).to.have.status(200);

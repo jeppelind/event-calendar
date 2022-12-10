@@ -11,7 +11,7 @@ export const resolvers: Resolvers = {
     getUpcomingEvents: async (parent, args, request) => {
       authorize(request.user.role, Roles.READ);
       const cachedEvents = await getEventCache();
-      if (cachedEvents) {
+      if (cachedEvents.length > 0) {
         return getEventsSlice(cachedEvents, args.startIndex, args.endIndex);
       }
       const events: EventModel[] = await db.getUpcomingEvents();
